@@ -934,6 +934,30 @@
                 "minLength": 1,
                 "type": "string"
               },
+              "clientSecret": {
+                "description": "Optional client secret. Only required with the OAuth authentication method.",
+                "properties": {
+                  "key": {
+                    "description": "The key of the secret to select from.  Must be a valid secret key.",
+                    "type": "string"
+                  },
+                  "name": {
+                    "default": "",
+                    "description": "Name of the referent.\nThis field is effectively required, but due to backwards compatibility is\nallowed to be empty. Instances of this type with an empty value here are\nalmost certainly wrong.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+                    "type": "string"
+                  },
+                  "optional": {
+                    "description": "Specify whether the Secret or its key must be defined",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "key"
+                ],
+                "type": "object",
+                "x-kubernetes-map-type": "atomic",
+                "additionalProperties": false
+              },
               "enableHTTP2": {
                 "description": "enableHTTP2 defines whether to enable HTTP2.",
                 "type": "boolean"
@@ -1575,7 +1599,7 @@
               }
             },
             "required": [
-              "server"
+              "subscriptionID"
             ],
             "type": "object",
             "additionalProperties": false
@@ -1589,8 +1613,12 @@
         "digitalOceanSDConfigs": {
           "description": "digitalOceanSDConfigs defines a list of DigitalOcean service discovery configurations.",
           "items": {
-            "description": "DigitalOceanSDConfig allow retrieving scrape targets from DigitalOcean's Droplets API.\nThis service discovery uses the public IPv4 address by default, by that can be changed with relabeling\nSee https://prometheus.io/docs/prometheus/latest/configuration/configuration/#digitalocean_sd_config",
+            "description": "ConsulSDConfig defines a Consul service discovery configuration\nSee https://prometheus.io/docs/prometheus/latest/configuration/configuration/#consul_sd_config",
             "properties": {
+              "allowStale": {
+                "description": "Allow stale Consul results (see https://www.consul.io/api/features/consistency.html). Will reduce load on Consul.\nIf unset, Prometheus uses its default value.",
+                "type": "boolean"
+              },
               "authorization": {
                 "description": "authorization defines the header configuration to authenticate against the DigitalOcean API.\nCannot be set at the same time as `oauth2`.",
                 "properties": {
@@ -1637,6 +1665,36 @@
               "noProxy": {
                 "description": "noProxy defines a comma-separated string that can contain IPs, CIDR notation, domain names\nthat should be excluded from proxying. IP and domain names can\ncontain port numbers.\n\nIt requires Prometheus >= v2.43.0, Alertmanager >= v0.25.0 or Thanos >= v0.32.0.",
                 "type": "string"
+              },
+              "enableHTTP2": {
+                "description": "Whether to enable HTTP2.\nIf unset, Prometheus uses its default value.",
+                "type": "boolean"
+              },
+              "filter": {
+                "description": "Filter expression used to filter the catalog results.\nSee https://www.consul.io/api-docs/catalog#list-services\nIt requires Prometheus >= 3.0.0.",
+                "minLength": 1,
+                "type": "string"
+              },
+              "followRedirects": {
+                "description": "Configure whether HTTP requests follow HTTP 3xx redirects.\nIf unset, Prometheus uses its default value.",
+                "type": "boolean"
+              },
+              "namespace": {
+                "description": "Namespaces are only supported in Consul Enterprise.\n\nIt requires Prometheus >= 2.28.0.",
+                "minLength": 1,
+                "type": "string"
+              },
+              "noProxy": {
+                "description": "`noProxy` is a comma-separated string that can contain IPs, CIDR notation, domain names\nthat should be excluded from proxying. IP and domain names can\ncontain port numbers.\n\nIt requires Prometheus >= v2.43.0, Alertmanager >= v0.25.0 or Thanos >= v0.32.0.",
+                "type": "string"
+              },
+              "nodeMeta": {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "description": "Node metadata key/value pairs to filter nodes for a given service.\nStarting with Consul 1.14, it is recommended to use `filter` with the `NodeMeta` selector instead.",
+                "type": "object",
+                "x-kubernetes-map-type": "atomic"
               },
               "oauth2": {
                 "description": "oauth2 defines the configuration to use on every scrape request.",
@@ -4001,6 +4059,10 @@
         },
         "enableHTTP2": {
           "description": "enableHTTP2 defines whether to enable HTTP2.",
+          "type": "boolean"
+        },
+        "enableHTTP2": {
+          "description": "Whether to enable HTTP2.",
           "type": "boolean"
         },
         "eurekaSDConfigs": {

@@ -75,6 +75,10 @@
                   },
                   "request": {
                     "type": "string"
+                  },
+                  "request": {
+                    "description": "Request is the name chosen for a request in the referenced claim.\nIf empty, everything from the claim is made available, otherwise\nonly the result of this request.",
+                    "type": "string"
                   }
                 },
                 "required": [
@@ -2289,6 +2293,10 @@
           "type": "boolean"
         },
         "useVMConfigReloader": {
+          "type": "boolean"
+        },
+        "useVMConfigReloader": {
+          "description": "UseVMConfigReloader replaces prometheus-like config-reloader\nwith vm one. It uses secrets watch instead of file watch\nwhich greatly increases speed of config updates",
           "type": "boolean"
         },
         "userNamespaceSelector": {

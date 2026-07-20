@@ -2096,6 +2096,7 @@
                                     "type": "string"
                                   },
                                   "value": {
+                                    "description": "Value is this DNS resolver option's value.",
                                     "type": "string"
                                   }
                                 },

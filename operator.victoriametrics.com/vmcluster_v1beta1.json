@@ -173,6 +173,7 @@
                         "type": "string"
                       },
                       "value": {
+                        "description": "Value is this DNS resolver option's value.",
                         "type": "string"
                       }
                     },
@@ -200,6 +201,7 @@
               "additionalProperties": {
                 "type": "string"
               },
+              "description": "ExtraArgs that will be passed to the application container\nfor example remoteWrite.tmpDataPath: /tmp",
               "type": "object"
             },
             "extraEnvs": {
@@ -503,6 +505,10 @@
                         "type": "string"
                       },
                       "request": {
+                        "type": "string"
+                      },
+                      "request": {
+                        "description": "Request is the name chosen for a request in the referenced claim.\nIf empty, everything from the claim is made available, otherwise\nonly the result of this request.",
                         "type": "string"
                       }
                     },
@@ -910,6 +916,7 @@
           "additionalProperties": false
         },
         "vmselect": {
+          "description": "VMSelect defines configuration section for vmselect components of the victoria-metrics cluster",
           "properties": {
             "affinity": {
               "type": "object",
@@ -971,6 +978,7 @@
                         "type": "string"
                       },
                       "value": {
+                        "description": "Value is this DNS resolver option's value.",
                         "type": "string"
                       }
                     },
@@ -998,6 +1006,7 @@
               "additionalProperties": {
                 "type": "string"
               },
+              "description": "ExtraArgs that will be passed to the application container\nfor example remoteWrite.tmpDataPath: /tmp",
               "type": "object"
             },
             "extraEnvs": {
@@ -1295,6 +1304,10 @@
                         "type": "string"
                       },
                       "request": {
+                        "type": "string"
+                      },
+                      "request": {
+                        "description": "Request is the name chosen for a request in the referenced claim.\nIf empty, everything from the claim is made available, otherwise\nonly the result of this request.",
                         "type": "string"
                       }
                     },
@@ -1691,6 +1704,7 @@
                                 "type": "string"
                               },
                               "status": {
+                                "description": "Status is the status of the condition.\nCan be True, False, Unknown.\nMore info: https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#:~:text=state%20of%20pvc-,conditions.status,-(string)%2C%20required",
                                 "type": "string"
                               },
                               "type": {
@@ -2054,6 +2068,7 @@
                         "type": "string"
                       },
                       "value": {
+                        "description": "Value is this DNS resolver option's value.",
                         "type": "string"
                       }
                     },
@@ -2081,6 +2096,7 @@
               "additionalProperties": {
                 "type": "string"
               },
+              "description": "ExtraArgs that will be passed to the application container\nfor example remoteWrite.tmpDataPath: /tmp",
               "type": "object"
             },
             "extraEnvs": {
@@ -2962,6 +2978,10 @@
                       },
                       "request": {
                         "type": "string"
+                      },
+                      "request": {
+                        "description": "Request is the name chosen for a request in the referenced claim.\nIf empty, everything from the claim is made available, otherwise\nonly the result of this request.",
+                        "type": "string"
                       }
                     },
                     "required": [
@@ -3453,6 +3473,10 @@
                           },
                           "request": {
                             "type": "string"
+                          },
+                          "request": {
+                            "description": "Request is the name chosen for a request in the referenced claim.\nIf empty, everything from the claim is made available, otherwise\nonly the result of this request.",
+                            "type": "string"
                           }
                         },
                         "required": [
@@ -3841,6 +3865,7 @@
           "type": "integer"
         },
         "reason": {
+          "description": "Reason defines human readable error reason",
           "type": "string"
         },
         "updateStatus": {

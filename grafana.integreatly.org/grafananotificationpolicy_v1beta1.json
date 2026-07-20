@@ -292,7 +292,7 @@
       "additionalProperties": false
     },
     "status": {
-      "description": "GrafanaNotificationPolicyStatus defines the observed state of GrafanaNotificationPolicy",
+      "description": "The most recent observed state of a Grafana resource",
       "properties": {
         "conditions": {
           "description": "Results when synchronizing resource with Grafana instances",

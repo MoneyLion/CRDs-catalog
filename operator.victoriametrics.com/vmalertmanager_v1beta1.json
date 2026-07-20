@@ -250,6 +250,7 @@
                           "type": "string"
                         },
                         "status": {
+                          "description": "Status is the status of the condition.\nCan be True, False, Unknown.\nMore info: https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#:~:text=state%20of%20pvc-,conditions.status,-(string)%2C%20required",
                           "type": "string"
                         },
                         "type": {
@@ -307,6 +308,10 @@
           "type": "string"
         },
         "componentVersion": {
+          "type": "string"
+        },
+        "clusterDomainName": {
+          "description": "ClusterDomainName defines domain name suffix for in-cluster dns addresses\naka .cluster.local\nused to build pod peer addresses for in-cluster communication",
           "type": "string"
         },
         "configMaps": {
@@ -1094,6 +1099,10 @@
                   },
                   "request": {
                     "type": "string"
+                  },
+                  "request": {
+                    "description": "Request is the name chosen for a request in the referenced claim.\nIf empty, everything from the claim is made available, otherwise\nonly the result of this request.",
+                    "type": "string"
                   }
                 },
                 "required": [
@@ -1485,6 +1494,7 @@
                             "type": "string"
                           },
                           "status": {
+                            "description": "Status is the status of the condition.\nCan be True, False, Unknown.\nMore info: https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/#:~:text=state%20of%20pvc-,conditions.status,-(string)%2C%20required",
                             "type": "string"
                           },
                           "type": {
@@ -1723,6 +1733,10 @@
           "type": "boolean"
         },
         "useVMConfigReloader": {
+          "type": "boolean"
+        },
+        "useVMConfigReloader": {
+          "description": "UseVMConfigReloader replaces prometheus-like config-reloader\nwith vm one. It uses secrets watch instead of file watch\nwhich greatly increases speed of config updates",
           "type": "boolean"
         },
         "volumeMounts": {

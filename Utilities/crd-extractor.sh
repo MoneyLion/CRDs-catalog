@@ -9,6 +9,8 @@ if [ -n "${KUBECTL_CONTEXT:-}" ]; then
     KUBECTL_ARGS=(kubectl --context="${KUBECTL_CONTEXT}")
 fi
 
+set -euo pipefail
+
 fetch_crd() {
     filename=${1%% *}
     if ! "${KUBECTL_ARGS[@]}" get crds "$filename" -o yaml >"$TMP/$filename.yaml" 2>/dev/null; then
