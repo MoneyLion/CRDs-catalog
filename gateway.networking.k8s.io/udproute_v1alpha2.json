@@ -71,6 +71,7 @@
           },
           "maxItems": 32,
           "type": "array",
+          "x-kubernetes-list-type": "atomic",
           "x-kubernetes-validations": [
             {
               "message": "sectionName or port must be specified when parentRefs includes 2 or more references to the same parent",
@@ -150,7 +151,8 @@
                 },
                 "maxItems": 16,
                 "minItems": 1,
-                "type": "array"
+                "type": "array",
+                "x-kubernetes-list-type": "atomic"
               },
               "name": {
                 "description": "Name is the name of the route rule. This name MUST be unique within a Route if it is set.\n\nSupport: Extended",
@@ -160,18 +162,30 @@
                 "type": "string"
               }
             },
+            "required": [
+              "backendRefs"
+            ],
             "type": "object",
             "additionalProperties": false
           },
           "maxItems": 16,
           "minItems": 1,
           "type": "array",
+          "x-kubernetes-list-type": "atomic",
           "x-kubernetes-validations": [
             {
               "message": "Rule name must be unique within the route",
               "rule": "self.all(l1, !has(l1.name) || self.exists_one(l2, has(l2.name) && l1.name == l2.name))"
             }
           ]
+        },
+        "useDefaultGateways": {
+          "description": "UseDefaultGateways indicates the default Gateway scope to use for this\nRoute. If unset (the default) or set to None, the Route will not be\nattached to any default Gateway; if set, it will be attached to any\ndefault Gateway supporting the named scope, subject to the usual rules\nabout which Routes a Gateway is allowed to claim.\n\nThink carefully before using this functionality! The set of default\nGateways supporting the requested scope can change over time without\nany notice to the Route author, and in many situations it will not be\nappropriate to request a default Gateway for a given Route -- for\nexample, a Route with specific security requirements should almost\ncertainly not use a default Gateway.",
+          "enum": [
+            "All",
+            "None"
+          ],
+          "type": "string"
         }
       },
       "required": [
@@ -189,7 +203,7 @@
             "description": "RouteParentStatus describes the status of a route with respect to an\nassociated Parent.",
             "properties": {
               "conditions": {
-                "description": "Conditions describes the status of the route with respect to the Gateway.\nNote that the route's availability is also subject to the Gateway's own\nstatus conditions and listener status.\n\nIf the Route's ParentRef specifies an existing Gateway that supports\nRoutes of this kind AND that Gateway's controller has sufficient access,\nthen that Gateway's controller MUST set the \"Accepted\" condition on the\nRoute, to indicate whether the route has been accepted or rejected by the\nGateway, and why.\n\nA Route MUST be considered \"Accepted\" if at least one of the Route's\nrules is implemented by the Gateway.\n\nThere are a number of cases where the \"Accepted\" condition may not be set\ndue to lack of controller visibility, that includes when:\n\n* The Route refers to a nonexistent parent.\n* The Route is of a type that the controller does not support.\n* The Route is in a namespace the controller does not have access to.",
+                "description": "Conditions describes the status of the route with respect to the Gateway.\nNote that the route's availability is also subject to the Gateway's own\nstatus conditions and listener status.\n\nIf the Route's ParentRef specifies an existing Gateway that supports\nRoutes of this kind AND that Gateway's controller has sufficient access,\nthen that Gateway's controller MUST set the \"Accepted\" condition on the\nRoute, to indicate whether the route has been accepted or rejected by the\nGateway, and why.\n\nA Route MUST be considered \"Accepted\" if at least one of the Route's\nrules is implemented by the Gateway.\n\nThere are a number of cases where the \"Accepted\" condition may not be set\ndue to lack of controller visibility, that includes when:\n\n* The Route refers to a nonexistent parent.\n* The Route is of a type that the controller does not support.\n* The Route is in a namespace to which the controller does not have access.",
                 "items": {
                   "description": "Condition contains details for one aspect of the current state of this API Resource.",
                   "properties": {
@@ -311,6 +325,7 @@
               }
             },
             "required": [
+              "conditions",
               "controllerName",
               "parentRef"
             ],
@@ -318,7 +333,8 @@
             "additionalProperties": false
           },
           "maxItems": 32,
-          "type": "array"
+          "type": "array",
+          "x-kubernetes-list-type": "atomic"
         }
       },
       "required": [

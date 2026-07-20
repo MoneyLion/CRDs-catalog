@@ -65,9 +65,77 @@
           "type": "object",
           "additionalProperties": false
         },
+        "labels": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Optional. Labels as key value pairs.",
+          "type": "object"
+        },
         "location": {
           "description": "Immutable. Location of the instance.",
           "type": "string"
+        },
+        "privateConfig": {
+          "description": "Optional. PrivateConfig includes settings for private instance.",
+          "properties": {
+            "caPoolRef": {
+              "description": "Required. Immutable. CA pool resource, resource must in the format of `projects/{project}/locations/{location}/caPools/{ca_pool}`.",
+              "oneOf": [
+                {
+                  "not": {
+                    "required": [
+                      "external"
+                    ]
+                  },
+                  "required": [
+                    "name"
+                  ]
+                },
+                {
+                  "not": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "name"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "namespace"
+                        ]
+                      }
+                    ]
+                  },
+                  "required": [
+                    "external"
+                  ]
+                }
+              ],
+              "properties": {
+                "external": {
+                  "description": "A reference to an externally managed PrivateCACAPool. Should be in the format `projects/{project_id}/locations/{region}/caPools/{caPool}`.",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "The `name` of a `PrivateCACAPool` resource.",
+                  "type": "string"
+                },
+                "namespace": {
+                  "description": "The `namespace` of a `PrivateCACAPool` resource.",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "additionalProperties": false
+            },
+            "isPrivate": {
+              "description": "Required. Immutable. Indicate if it's private instance.",
+              "type": "boolean"
+            }
+          },
+          "type": "object",
+          "additionalProperties": false
         },
         "projectRef": {
           "description": "Immutable. The Project that this resource belongs to.",
@@ -180,6 +248,10 @@
         "observedState": {
           "description": "ObservedState is the state of the resource as most recently observed in GCP.",
           "properties": {
+            "createTime": {
+              "description": "Output only. Create timestamp.",
+              "type": "string"
+            },
             "hostConfig": {
               "description": "Output only. A list of hostnames for this instance.",
               "properties": {
@@ -203,12 +275,31 @@
               "type": "object",
               "additionalProperties": false
             },
+            "privateConfig": {
+              "description": "Optional. PrivateConfig includes settings for private instance.",
+              "properties": {
+                "httpServiceAttachment": {
+                  "description": "Output only. Service Attachment for HTTP, resource is in the format of `projects/{project}/regions/{region}/serviceAttachments/{service_attachment}`.",
+                  "type": "string"
+                },
+                "sshServiceAttachment": {
+                  "description": "Output only. Service Attachment for SSH, resource is in the format of `projects/{project}/regions/{region}/serviceAttachments/{service_attachment}`.",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "additionalProperties": false
+            },
             "state": {
               "description": "Output only. Current state of the instance.",
               "type": "string"
             },
             "stateNote": {
               "description": "Output only. An optional field providing information about the current instance state.",
+              "type": "string"
+            },
+            "updateTime": {
+              "description": "Output only. Update timestamp.",
               "type": "string"
             }
           },

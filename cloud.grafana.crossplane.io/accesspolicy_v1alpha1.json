@@ -1,5 +1,5 @@
 {
-  "description": "AccessPolicy is the Schema for the AccessPolicys API. Official documentation https://grafana.com/docs/grafana-cloud/account-management/authentication-and-permissions/access-policies/API documentation https://grafana.com/docs/grafana-cloud/developer-resources/api-reference/cloud-api/#create-an-access-policy Required access policy scopes: accesspolicies:readaccesspolicies:writeaccesspolicies:delete",
+  "description": "AccessPolicy is the Schema for the AccessPolicys API. Official documentation https://grafana.com/docs/grafana-cloud/security-and-account-management/authentication-and-permissions/access-policies/API documentation https://grafana.com/docs/grafana-cloud/developer-resources/api-reference/cloud-api/#create-an-access-policy Required access policy scopes: accesspolicies:readaccesspolicies:writeaccesspolicies:delete",
   "properties": {
     "apiVersion": {
       "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
@@ -26,6 +26,24 @@
         },
         "forProvider": {
           "properties": {
+            "conditions": {
+              "description": "(Block Set) Conditions for the access policy. (see below for nested schema)\nConditions for the access policy.",
+              "items": {
+                "properties": {
+                  "allowedSubnets": {
+                    "description": "(Set of String) Conditions that apply to the access policy,such as IP Allow lists.\nConditions that apply to the access policy,such as IP Allow lists.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array",
+                    "x-kubernetes-list-type": "set"
+                  }
+                },
+                "type": "object",
+                "additionalProperties": false
+              },
+              "type": "array"
+            },
             "displayName": {
               "description": "(String) Display name of the access policy. Defaults to the name.\nDisplay name of the access policy. Defaults to the name.",
               "type": "string"
@@ -151,7 +169,7 @@
               "type": "string"
             },
             "scopes": {
-              "description": "cloud/account-management/authentication-and-permissions/access-policies/#scopes for possible values.\nScopes of the access policy. See https://grafana.com/docs/grafana-cloud/account-management/authentication-and-permissions/access-policies/#scopes for possible values.",
+              "description": "cloud/security-and-account-management/authentication-and-permissions/access-policies/#scopes for possible values.\nScopes of the access policy. See https://grafana.com/docs/grafana-cloud/security-and-account-management/authentication-and-permissions/access-policies/#scopes for possible values.",
               "items": {
                 "type": "string"
               },
@@ -165,6 +183,24 @@
         "initProvider": {
           "description": "THIS IS A BETA FIELD. It will be honored\nunless the Management Policies feature flag is disabled.\nInitProvider holds the same fields as ForProvider, with the exception\nof Identifier and other resource reference fields. The fields that are\nin InitProvider are merged into ForProvider when the resource is created.\nThe same fields are also added to the terraform ignore_changes hook, to\navoid updating them after creation. This is useful for fields that are\nrequired on creation, but we do not desire to update them after creation,\nfor example because of an external controller is managing them, like an\nautoscaler.",
           "properties": {
+            "conditions": {
+              "description": "(Block Set) Conditions for the access policy. (see below for nested schema)\nConditions for the access policy.",
+              "items": {
+                "properties": {
+                  "allowedSubnets": {
+                    "description": "(Set of String) Conditions that apply to the access policy,such as IP Allow lists.\nConditions that apply to the access policy,such as IP Allow lists.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array",
+                    "x-kubernetes-list-type": "set"
+                  }
+                },
+                "type": "object",
+                "additionalProperties": false
+              },
+              "type": "array"
+            },
             "displayName": {
               "description": "(String) Display name of the access policy. Defaults to the name.\nDisplay name of the access policy. Defaults to the name.",
               "type": "string"
@@ -290,7 +326,7 @@
               "type": "string"
             },
             "scopes": {
-              "description": "cloud/account-management/authentication-and-permissions/access-policies/#scopes for possible values.\nScopes of the access policy. See https://grafana.com/docs/grafana-cloud/account-management/authentication-and-permissions/access-policies/#scopes for possible values.",
+              "description": "cloud/security-and-account-management/authentication-and-permissions/access-policies/#scopes for possible values.\nScopes of the access policy. See https://grafana.com/docs/grafana-cloud/security-and-account-management/authentication-and-permissions/access-policies/#scopes for possible values.",
               "items": {
                 "type": "string"
               },
@@ -361,88 +397,8 @@
           "type": "object",
           "additionalProperties": false
         },
-        "publishConnectionDetailsTo": {
-          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
-          "properties": {
-            "configRef": {
-              "default": {
-                "name": "default"
-              },
-              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
-              "properties": {
-                "name": {
-                  "description": "Name of the referenced object.",
-                  "type": "string"
-                },
-                "policy": {
-                  "description": "Policies for referencing.",
-                  "properties": {
-                    "resolution": {
-                      "default": "Required",
-                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
-                      "enum": [
-                        "Required",
-                        "Optional"
-                      ],
-                      "type": "string"
-                    },
-                    "resolve": {
-                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
-                      "enum": [
-                        "Always",
-                        "IfNotPresent"
-                      ],
-                      "type": "string"
-                    }
-                  },
-                  "type": "object",
-                  "additionalProperties": false
-                }
-              },
-              "required": [
-                "name"
-              ],
-              "type": "object",
-              "additionalProperties": false
-            },
-            "metadata": {
-              "description": "Metadata is the metadata for connection secret.",
-              "properties": {
-                "annotations": {
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
-                  "type": "object"
-                },
-                "labels": {
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
-                  "type": "object"
-                },
-                "type": {
-                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
-                  "type": "string"
-                }
-              },
-              "type": "object",
-              "additionalProperties": false
-            },
-            "name": {
-              "description": "Name is the name of the connection secret.",
-              "type": "string"
-            }
-          },
-          "required": [
-            "name"
-          ],
-          "type": "object",
-          "additionalProperties": false
-        },
         "writeConnectionSecretToRef": {
-          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
           "properties": {
             "name": {
               "description": "Name of the secret.",
@@ -490,6 +446,24 @@
       "properties": {
         "atProvider": {
           "properties": {
+            "conditions": {
+              "description": "(Block Set) Conditions for the access policy. (see below for nested schema)\nConditions for the access policy.",
+              "items": {
+                "properties": {
+                  "allowedSubnets": {
+                    "description": "(Set of String) Conditions that apply to the access policy,such as IP Allow lists.\nConditions that apply to the access policy,such as IP Allow lists.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array",
+                    "x-kubernetes-list-type": "set"
+                  }
+                },
+                "type": "object",
+                "additionalProperties": false
+              },
+              "type": "array"
+            },
             "createdAt": {
               "description": "(String) Creation date of the access policy.\nCreation date of the access policy.",
               "type": "string"
@@ -547,7 +521,7 @@
               "type": "string"
             },
             "scopes": {
-              "description": "cloud/account-management/authentication-and-permissions/access-policies/#scopes for possible values.\nScopes of the access policy. See https://grafana.com/docs/grafana-cloud/account-management/authentication-and-permissions/access-policies/#scopes for possible values.",
+              "description": "cloud/security-and-account-management/authentication-and-permissions/access-policies/#scopes for possible values.\nScopes of the access policy. See https://grafana.com/docs/grafana-cloud/security-and-account-management/authentication-and-permissions/access-policies/#scopes for possible values.",
               "items": {
                 "type": "string"
               },

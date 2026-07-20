@@ -76,7 +76,7 @@
           ],
           "properties": {
             "external": {
-              "description": "A reference to an externally managed SecureSourceManagerInstance resource. Should be in the format \"projects/<projectID>/locations/<location>/instances/<instanceID>\".",
+              "description": "A reference to an externally managed SecureSourceManagerInstance resource. Should be in the format \"projects/{{projectID}}/locations/{{location}}/instances/{{instanceID}}\".",
               "type": "string"
             },
             "name": {
@@ -150,14 +150,8 @@
           "additionalProperties": false
         },
         "resourceID": {
-          "description": "Immutable. The SecureSourceManagerRepository name. If not given, the metadata.name will be used.",
-          "type": "string",
-          "x-kubernetes-validations": [
-            {
-              "message": "ResourceID field is immutable",
-              "rule": "self == oldSelf"
-            }
-          ]
+          "description": "The SecureSourceManagerRepository name. If not given, the metadata.name will be used.",
+          "type": "string"
         }
       },
       "required": [
@@ -213,6 +207,22 @@
         "observedState": {
           "description": "ObservedState is the state of the resource as most recently observed in GCP.",
           "properties": {
+            "createTime": {
+              "description": "Output only. Create timestamp.",
+              "type": "string"
+            },
+            "etag": {
+              "description": "Output only. This checksum is computed by the server based on the value of other fields, and may be sent on update and delete requests to ensure the client has an up-to-date value before proceeding.",
+              "type": "string"
+            },
+            "uid": {
+              "description": "Output only. Unique identifier of the repository.",
+              "type": "string"
+            },
+            "updateTime": {
+              "description": "Output only. Update timestamp.",
+              "type": "string"
+            },
             "uris": {
               "description": "Output only. URIs for the repository.",
               "properties": {

@@ -91,6 +91,31 @@
                           "additionalProperties": false,
                           "x-kubernetes-map-type": "atomic"
                         },
+                        "fileKeyRef": {
+                          "properties": {
+                            "key": {
+                              "type": "string"
+                            },
+                            "optional": {
+                              "default": false,
+                              "type": "boolean"
+                            },
+                            "path": {
+                              "type": "string"
+                            },
+                            "volumeName": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "key",
+                            "path",
+                            "volumeName"
+                          ],
+                          "type": "object",
+                          "x-kubernetes-map-type": "atomic",
+                          "additionalProperties": false
+                        },
                         "resourceFieldRef": {
                           "type": "object",
                           "required": [
@@ -407,6 +432,9 @@
                       }
                     },
                     "additionalProperties": false
+                  },
+                  "stopSignal": {
+                    "type": "string"
                   }
                 },
                 "additionalProperties": false
@@ -793,6 +821,42 @@
               },
               "restartPolicy": {
                 "type": "string"
+              },
+              "restartPolicyRules": {
+                "items": {
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "exitCodes": {
+                      "properties": {
+                        "operator": {
+                          "type": "string"
+                        },
+                        "values": {
+                          "items": {
+                            "format": "int32",
+                            "type": "integer"
+                          },
+                          "type": "array",
+                          "x-kubernetes-list-type": "set"
+                        }
+                      },
+                      "required": [
+                        "operator"
+                      ],
+                      "type": "object",
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "action"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "type": "array",
+                "x-kubernetes-list-type": "atomic"
               },
               "securityContext": {
                 "type": "object",
@@ -1843,8 +1907,20 @@
                       "type": "string"
                     },
                     "stabilizationWindowSeconds": {
-                      "type": "integer",
-                      "format": "int32"
+                      "format": "int32",
+                      "type": "integer"
+                    },
+                    "tolerance": {
+                      "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ],
+                      "pattern": "^(\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))))?$",
+                      "x-kubernetes-int-or-string": true
                     }
                   },
                   "additionalProperties": false
@@ -1882,8 +1958,20 @@
                       "type": "string"
                     },
                     "stabilizationWindowSeconds": {
-                      "type": "integer",
-                      "format": "int32"
+                      "format": "int32",
+                      "type": "integer"
+                    },
+                    "tolerance": {
+                      "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "string"
+                        }
+                      ],
+                      "pattern": "^(\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\\+|-)?(([0-9]+(\\.[0-9]*)?)|(\\.[0-9]+))))?$",
+                      "x-kubernetes-int-or-string": true
                     }
                   },
                   "additionalProperties": false
@@ -1892,8 +1980,9 @@
               "additionalProperties": false
             },
             "maxReplicas": {
-              "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
             },
             "metrics": {
               "type": "array",
@@ -2013,16 +2102,19 @@
               }
             },
             "minReplicas": {
-              "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
             },
             "targetCPUUtilization": {
-              "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
             },
             "targetMemoryUtilization": {
-              "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
             }
           },
           "additionalProperties": false
@@ -2207,6 +2299,9 @@
           },
           "additionalProperties": false
         },
+        "dnsPolicy": {
+          "type": "string"
+        },
         "env": {
           "type": "array",
           "items": {
@@ -2259,6 +2354,31 @@
                     },
                     "additionalProperties": false,
                     "x-kubernetes-map-type": "atomic"
+                  },
+                  "fileKeyRef": {
+                    "properties": {
+                      "key": {
+                        "type": "string"
+                      },
+                      "optional": {
+                        "default": false,
+                        "type": "boolean"
+                      },
+                      "path": {
+                        "type": "string"
+                      },
+                      "volumeName": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "key",
+                      "path",
+                      "volumeName"
+                    ],
+                    "type": "object",
+                    "x-kubernetes-map-type": "atomic",
+                    "additionalProperties": false
                   },
                   "resourceFieldRef": {
                     "type": "object",
@@ -2355,8 +2475,62 @@
             "additionalProperties": false
           }
         },
+        "hostAliases": {
+          "items": {
+            "properties": {
+              "hostnames": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "x-kubernetes-list-type": "atomic"
+              },
+              "ip": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "ip"
+            ],
+            "type": "object",
+            "additionalProperties": false
+          },
+          "type": "array",
+          "x-kubernetes-list-type": "atomic"
+        },
         "hostNetwork": {
           "type": "boolean"
+        },
+        "hostPID": {
+          "type": "boolean"
+        },
+        "hostUsers": {
+          "type": "boolean"
+        },
+        "httpRoute": {
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "gateway": {
+              "type": "string"
+            },
+            "gatewayNamespace": {
+              "type": "string"
+            },
+            "hostnames": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "enabled",
+            "gateway"
+          ],
+          "type": "object",
+          "additionalProperties": false
         },
         "image": {
           "type": "string"
@@ -2504,6 +2678,31 @@
                           },
                           "additionalProperties": false,
                           "x-kubernetes-map-type": "atomic"
+                        },
+                        "fileKeyRef": {
+                          "properties": {
+                            "key": {
+                              "type": "string"
+                            },
+                            "optional": {
+                              "default": false,
+                              "type": "boolean"
+                            },
+                            "path": {
+                              "type": "string"
+                            },
+                            "volumeName": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "key",
+                            "path",
+                            "volumeName"
+                          ],
+                          "type": "object",
+                          "x-kubernetes-map-type": "atomic",
+                          "additionalProperties": false
                         },
                         "resourceFieldRef": {
                           "type": "object",
@@ -2821,6 +3020,9 @@
                       }
                     },
                     "additionalProperties": false
+                  },
+                  "stopSignal": {
+                    "type": "string"
                   }
                 },
                 "additionalProperties": false
@@ -3207,6 +3409,42 @@
               },
               "restartPolicy": {
                 "type": "string"
+              },
+              "restartPolicyRules": {
+                "items": {
+                  "properties": {
+                    "action": {
+                      "type": "string"
+                    },
+                    "exitCodes": {
+                      "properties": {
+                        "operator": {
+                          "type": "string"
+                        },
+                        "values": {
+                          "items": {
+                            "format": "int32",
+                            "type": "integer"
+                          },
+                          "type": "array",
+                          "x-kubernetes-list-type": "set"
+                        }
+                      },
+                      "required": [
+                        "operator"
+                      ],
+                      "type": "object",
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "action"
+                  ],
+                  "type": "object",
+                  "additionalProperties": false
+                },
+                "type": "array",
+                "x-kubernetes-list-type": "atomic"
               },
               "securityContext": {
                 "type": "object",
@@ -3758,6 +3996,9 @@
                 }
               },
               "additionalProperties": false
+            },
+            "stopSignal": {
+              "type": "string"
             }
           },
           "additionalProperties": false
@@ -3766,28 +4007,34 @@
           "type": "object",
           "properties": {
             "failureThreshold": {
-              "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
             },
             "initialDelaySeconds": {
-              "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
             },
             "periodSeconds": {
-              "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
             },
             "successThreshold": {
-              "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
             },
             "terminationGracePeriodSeconds": {
-              "type": "integer",
-              "format": "int64"
+              "format": "int64",
+              "minimum": 1,
+              "type": "integer"
             },
             "timeoutSeconds": {
-              "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
             }
           },
           "additionalProperties": false
@@ -3809,6 +4056,15 @@
             "statefulset"
           ]
         },
+        "networkPolicy": {
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            }
+          },
+          "type": "object",
+          "additionalProperties": false
+        },
         "nodeSelector": {
           "type": "object",
           "additionalProperties": {
@@ -3826,6 +4082,12 @@
                 },
                 "enableMetrics": {
                   "type": "boolean"
+                },
+                "extraLabels": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object"
                 }
               },
               "additionalProperties": false
@@ -3843,6 +4105,18 @@
               "type": "string"
             }
           },
+          "additionalProperties": false
+        },
+        "persistentVolumeClaimRetentionPolicy": {
+          "properties": {
+            "whenDeleted": {
+              "type": "string"
+            },
+            "whenScaled": {
+              "type": "string"
+            }
+          },
+          "type": "object",
           "additionalProperties": false
         },
         "podAnnotations": {
@@ -3915,6 +4189,13 @@
           },
           "additionalProperties": false
         },
+        "podManagementPolicy": {
+          "enum": [
+            "OrderedReady",
+            "Parallel"
+          ],
+          "type": "string"
+        },
         "podSecurityContext": {
           "type": "object",
           "properties": {
@@ -3950,6 +4231,9 @@
             "runAsUser": {
               "type": "integer",
               "format": "int64"
+            },
+            "seLinuxChangePolicy": {
+              "type": "string"
             },
             "seLinuxChangePolicy": {
               "type": "string"
@@ -4051,8 +4335,10 @@
                 "type": "string"
               },
               "hostPort": {
-                "type": "integer",
-                "format": "int32"
+                "format": "int32",
+                "maximum": 65535,
+                "minimum": 0,
+                "type": "integer"
               },
               "name": {
                 "type": "string"
@@ -4092,34 +4378,40 @@
           "type": "object",
           "properties": {
             "failureThreshold": {
-              "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
             },
             "initialDelaySeconds": {
-              "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
             },
             "periodSeconds": {
-              "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
             },
             "successThreshold": {
-              "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
             },
             "terminationGracePeriodSeconds": {
-              "type": "integer",
-              "format": "int64"
+              "format": "int64",
+              "minimum": 1,
+              "type": "integer"
             },
             "timeoutSeconds": {
-              "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
             }
           },
           "additionalProperties": false
         },
         "replicas": {
-          "type": "integer",
+          "default": 1,
           "format": "int32",
           "default": 1
         },
@@ -4304,6 +4596,42 @@
         },
         "shareProcessNamespace": {
           "type": "boolean"
+        },
+        "startupProbe": {
+          "properties": {
+            "failureThreshold": {
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            },
+            "initialDelaySeconds": {
+              "format": "int32",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "periodSeconds": {
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            },
+            "successThreshold": {
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            },
+            "terminationGracePeriodSeconds": {
+              "format": "int64",
+              "minimum": 1,
+              "type": "integer"
+            },
+            "timeoutSeconds": {
+              "format": "int32",
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "type": "object",
+          "additionalProperties": false
         },
         "targetAllocator": {
           "type": "object",
@@ -4996,6 +5324,16 @@
               "format": "duration",
               "default": "30s"
             },
+            "collectorNotReadyGracePeriod": {
+              "default": "30s",
+              "format": "duration",
+              "type": "string"
+            },
+            "collectorTargetReloadInterval": {
+              "default": "30s",
+              "format": "duration",
+              "type": "string"
+            },
             "enabled": {
               "type": "boolean"
             },
@@ -5051,6 +5389,31 @@
                         },
                         "additionalProperties": false,
                         "x-kubernetes-map-type": "atomic"
+                      },
+                      "fileKeyRef": {
+                        "properties": {
+                          "key": {
+                            "type": "string"
+                          },
+                          "optional": {
+                            "default": false,
+                            "type": "boolean"
+                          },
+                          "path": {
+                            "type": "string"
+                          },
+                          "volumeName": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "key",
+                          "path",
+                          "volumeName"
+                        ],
+                        "type": "object",
+                        "x-kubernetes-map-type": "atomic",
+                        "additionalProperties": false
                       },
                       "resourceFieldRef": {
                         "type": "object",
@@ -5135,6 +5498,12 @@
                     },
                     "enableMetrics": {
                       "type": "boolean"
+                    },
+                    "extraLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "type": "object"
                     }
                   },
                   "additionalProperties": false
@@ -5205,6 +5574,9 @@
                 "runAsUser": {
                   "type": "integer",
                   "format": "int64"
+                },
+                "seLinuxChangePolicy": {
+                  "type": "string"
                 },
                 "seLinuxChangePolicy": {
                   "type": "string"
@@ -5298,19 +5670,65 @@
               "type": "object",
               "properties": {
                 "allowNamespaces": {
-                  "type": "array",
                   "items": {
                     "type": "string"
-                  }
+                  },
+                  "type": "array"
                 },
                 "denyNamespaces": {
-                  "type": "array",
                   "items": {
                     "type": "string"
-                  }
+                  },
+                  "type": "array"
                 },
                 "enabled": {
                   "type": "boolean"
+                },
+                "evaluationInterval": {
+                  "default": "30s",
+                  "format": "duration",
+                  "type": "string"
+                },
+                "podMonitorNamespaceSelector": {
+                  "default": {},
+                  "properties": {
+                    "matchExpressions": {
+                      "items": {
+                        "properties": {
+                          "key": {
+                            "type": "string"
+                          },
+                          "operator": {
+                            "type": "string"
+                          },
+                          "values": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array",
+                            "x-kubernetes-list-type": "atomic"
+                          }
+                        },
+                        "required": [
+                          "key",
+                          "operator"
+                        ],
+                        "type": "object",
+                        "additionalProperties": false
+                      },
+                      "type": "array",
+                      "x-kubernetes-list-type": "atomic"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object",
+                  "x-kubernetes-map-type": "atomic",
+                  "additionalProperties": false
                 },
                 "podMonitorSelector": {
                   "type": "object",
@@ -5432,10 +5850,233 @@
                   "additionalProperties": false,
                   "x-kubernetes-map-type": "atomic"
                 },
+                "probeNamespaceSelector": {
+                  "default": {},
+                  "properties": {
+                    "matchExpressions": {
+                      "items": {
+                        "properties": {
+                          "key": {
+                            "type": "string"
+                          },
+                          "operator": {
+                            "type": "string"
+                          },
+                          "values": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array",
+                            "x-kubernetes-list-type": "atomic"
+                          }
+                        },
+                        "required": [
+                          "key",
+                          "operator"
+                        ],
+                        "type": "object",
+                        "additionalProperties": false
+                      },
+                      "type": "array",
+                      "x-kubernetes-list-type": "atomic"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object",
+                  "x-kubernetes-map-type": "atomic",
+                  "additionalProperties": false
+                },
+                "probeSelector": {
+                  "properties": {
+                    "matchExpressions": {
+                      "items": {
+                        "properties": {
+                          "key": {
+                            "type": "string"
+                          },
+                          "operator": {
+                            "type": "string"
+                          },
+                          "values": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array",
+                            "x-kubernetes-list-type": "atomic"
+                          }
+                        },
+                        "required": [
+                          "key",
+                          "operator"
+                        ],
+                        "type": "object",
+                        "additionalProperties": false
+                      },
+                      "type": "array",
+                      "x-kubernetes-list-type": "atomic"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object",
+                  "x-kubernetes-map-type": "atomic",
+                  "additionalProperties": false
+                },
+                "scrapeClasses": {
+                  "items": {
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "x-kubernetes-list-type": "atomic",
+                  "x-kubernetes-preserve-unknown-fields": true
+                },
+                "scrapeConfigNamespaceSelector": {
+                  "default": {},
+                  "properties": {
+                    "matchExpressions": {
+                      "items": {
+                        "properties": {
+                          "key": {
+                            "type": "string"
+                          },
+                          "operator": {
+                            "type": "string"
+                          },
+                          "values": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array",
+                            "x-kubernetes-list-type": "atomic"
+                          }
+                        },
+                        "required": [
+                          "key",
+                          "operator"
+                        ],
+                        "type": "object",
+                        "additionalProperties": false
+                      },
+                      "type": "array",
+                      "x-kubernetes-list-type": "atomic"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object",
+                  "x-kubernetes-map-type": "atomic",
+                  "additionalProperties": false
+                },
+                "scrapeConfigSelector": {
+                  "properties": {
+                    "matchExpressions": {
+                      "items": {
+                        "properties": {
+                          "key": {
+                            "type": "string"
+                          },
+                          "operator": {
+                            "type": "string"
+                          },
+                          "values": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array",
+                            "x-kubernetes-list-type": "atomic"
+                          }
+                        },
+                        "required": [
+                          "key",
+                          "operator"
+                        ],
+                        "type": "object",
+                        "additionalProperties": false
+                      },
+                      "type": "array",
+                      "x-kubernetes-list-type": "atomic"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object",
+                  "x-kubernetes-map-type": "atomic",
+                  "additionalProperties": false
+                },
                 "scrapeInterval": {
                   "type": "string",
                   "format": "duration",
                   "default": "30s"
+                },
+                "scrapeProtocols": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "secretNamespaces": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "serviceMonitorNamespaceSelector": {
+                  "default": {},
+                  "properties": {
+                    "matchExpressions": {
+                      "items": {
+                        "properties": {
+                          "key": {
+                            "type": "string"
+                          },
+                          "operator": {
+                            "type": "string"
+                          },
+                          "values": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array",
+                            "x-kubernetes-list-type": "atomic"
+                          }
+                        },
+                        "required": [
+                          "key",
+                          "operator"
+                        ],
+                        "type": "object",
+                        "additionalProperties": false
+                      },
+                      "type": "array",
+                      "x-kubernetes-list-type": "atomic"
+                    },
+                    "matchLabels": {
+                      "additionalProperties": {
+                        "type": "string"
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object",
+                  "x-kubernetes-map-type": "atomic",
+                  "additionalProperties": false
                 },
                 "serviceMonitorSelector": {
                   "type": "object",
@@ -5878,6 +6519,9 @@
             },
             "additionalProperties": false
           }
+        },
+        "trafficDistribution": {
+          "type": "string"
         },
         "upgradeStrategy": {
           "type": "string",
@@ -7197,6 +7841,41 @@
                           },
                           "additionalProperties": false
                         },
+                        "podCertificate": {
+                          "properties": {
+                            "certificateChainPath": {
+                              "type": "string"
+                            },
+                            "credentialBundlePath": {
+                              "type": "string"
+                            },
+                            "keyPath": {
+                              "type": "string"
+                            },
+                            "keyType": {
+                              "type": "string"
+                            },
+                            "maxExpirationSeconds": {
+                              "format": "int32",
+                              "type": "integer"
+                            },
+                            "signerName": {
+                              "type": "string"
+                            },
+                            "userAnnotations": {
+                              "additionalProperties": {
+                                "type": "string"
+                              },
+                              "type": "object"
+                            }
+                          },
+                          "required": [
+                            "keyType",
+                            "signerName"
+                          ],
+                          "type": "object",
+                          "additionalProperties": false
+                        },
                         "secret": {
                           "type": "object",
                           "properties": {
@@ -7486,25 +8165,29 @@
           "x-kubernetes-list-type": "atomic"
         }
       },
-      "additionalProperties": false,
+      "required": [
+        "config"
+      ],
+      "type": "object",
       "x-kubernetes-validations": [
         {
-          "rule": "!(self.mode == 'sidecar' \u0026\u0026 size(self.tolerations) \u003e 0) || !has(self.tolerations)",
-          "message": "the OpenTelemetry Collector mode is set to sidecar, which does not support the attribute 'tolerations'"
+          "message": "the OpenTelemetry Collector mode is set to sidecar, which does not support the attribute 'tolerations'",
+          "rule": "!(self.mode == 'sidecar' && size(self.tolerations) > 0) || !has(self.tolerations)"
         },
         {
-          "rule": "!(self.mode == 'sidecar' \u0026\u0026 self.priorityClassName != '') || !has(self.priorityClassName)",
-          "message": "the OpenTelemetry Collector mode is set to sidecar, which does not support the attribute 'priorityClassName'"
+          "message": "the OpenTelemetry Collector mode is set to sidecar, which does not support the attribute 'priorityClassName'",
+          "rule": "!(self.mode == 'sidecar' && self.priorityClassName != '') || !has(self.priorityClassName)"
         },
         {
-          "rule": "!(self.mode == 'sidecar' \u0026\u0026 self.affinity != null) || !has(self.affinity)",
-          "message": "the OpenTelemetry Collector mode is set to sidecar, which does not support the attribute 'affinity'"
+          "message": "the OpenTelemetry Collector mode is set to sidecar, which does not support the attribute 'affinity'",
+          "rule": "!(self.mode == 'sidecar' && self.affinity != null) || !has(self.affinity)"
         },
         {
-          "rule": "!(self.mode == 'sidecar' \u0026\u0026 size(self.additionalContainers) \u003e 0) || !has(self.additionalContainers)",
-          "message": "the OpenTelemetry Collector mode is set to sidecar, which does not support the attribute 'additionalContainers'"
+          "message": "the OpenTelemetry Collector mode is set to sidecar, which does not support the attribute 'additionalContainers'",
+          "rule": "!(self.mode == 'sidecar' && size(self.additionalContainers) > 0) || !has(self.additionalContainers)"
         }
-      ]
+      ],
+      "additionalProperties": false
     },
     "status": {
       "type": "object",

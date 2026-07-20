@@ -23,6 +23,7 @@
           "type": "array"
         },
         "dataExchangeRef": {
+          "description": "BigQueryAnalyticsHubDataExchangeRef defines the resource reference to BigQueryAnalyticsHubDataExchange, which \"External\" field holds the GCP identifier for the KRM object.",
           "oneOf": [
             {
               "not": {
@@ -56,15 +57,15 @@
           ],
           "properties": {
             "external": {
-              "description": "The DataExchange selfLink, when not managed by Config Connector.",
+              "description": "A reference to an externally managed BigQueryAnalyticsHubDataExchange resource. Should be in the format \"projects/{{projectID}}/locations/{{location}}/dataexchanges/{{dataexchangeID}}\".",
               "type": "string"
             },
             "name": {
-              "description": "The `name` field of a `DataExchange` resource.",
+              "description": "The name of a BigQueryAnalyticsHubDataExchange resource.",
               "type": "string"
             },
             "namespace": {
-              "description": "The `namespace` field of a `DataExchange` resource.",
+              "description": "The namespace of a BigQueryAnalyticsHubDataExchange resource.",
               "type": "string"
             }
           },
@@ -233,15 +234,15 @@
                   ],
                   "properties": {
                     "external": {
-                      "description": "If provided must be in the format `projects/[project_id]/datasets/[dataset_id]`.",
+                      "description": "A reference to an externally-managed BigQueryDataset resource. Should be in the format \"projects/{{projectID}}/datasets/{{datasetID}}\".",
                       "type": "string"
                     },
                     "name": {
-                      "description": "The `metadata.name` field of a `BigQueryDataset` resource.",
+                      "description": "The name of a BigQueryDataset resource.",
                       "type": "string"
                     },
                     "namespace": {
-                      "description": "The `metadata.namespace` field of a `BigQueryDataset` resource.",
+                      "description": "The namespace of a BigQueryDataset resource.",
                       "type": "string"
                     }
                   },
@@ -253,36 +254,15 @@
                   "properties": {
                     "enabled": {
                       "description": "Optional. If true, enable restricted export.",
-                      "properties": {
-                        "value": {
-                          "description": "The bool value.",
-                          "type": "boolean"
-                        }
-                      },
-                      "type": "object",
-                      "additionalProperties": false
+                      "type": "boolean"
                     },
                     "restrictDirectTableAccess": {
                       "description": "Optional. If true, restrict direct table access (read api/tabledata.list) on linked table.",
-                      "properties": {
-                        "value": {
-                          "description": "The bool value.",
-                          "type": "boolean"
-                        }
-                      },
-                      "type": "object",
-                      "additionalProperties": false
+                      "type": "boolean"
                     },
                     "restrictQueryResult": {
                       "description": "Optional. If true, restrict export of query result derived from restricted linked dataset table.",
-                      "properties": {
-                        "value": {
-                          "description": "The bool value.",
-                          "type": "boolean"
-                        }
-                      },
-                      "type": "object",
-                      "additionalProperties": false
+                      "type": "boolean"
                     }
                   },
                   "type": "object",
@@ -292,9 +272,55 @@
                   "description": "Optional. Resources in this dataset that are selectively shared. If this field is empty, then the entire dataset (all resources) are shared. This field is only valid for data clean room exchanges.",
                   "items": {
                     "properties": {
-                      "table": {
-                        "description": "Optional. Format: For table: `projects/{projectId}/datasets/{datasetId}/tables/{tableId}` Example:\"projects/test_project/datasets/test_dataset/tables/test_table\"",
-                        "type": "string"
+                      "tableRef": {
+                        "description": "Optional. A reference to a BigQueryTable. Format: `projects/{projectId}/datasets/{datasetId}/tables/{tableId}` Example:\"projects/test_project/datasets/test_dataset/tables/test_table\"",
+                        "oneOf": [
+                          {
+                            "not": {
+                              "required": [
+                                "external"
+                              ]
+                            },
+                            "required": [
+                              "name"
+                            ]
+                          },
+                          {
+                            "not": {
+                              "anyOf": [
+                                {
+                                  "required": [
+                                    "name"
+                                  ]
+                                },
+                                {
+                                  "required": [
+                                    "namespace"
+                                  ]
+                                }
+                              ]
+                            },
+                            "required": [
+                              "external"
+                            ]
+                          }
+                        ],
+                        "properties": {
+                          "external": {
+                            "description": "A reference to an externally-managed BigQueryTable resource. Should be in the format \"projects/{{projectID}}/datasets/{{datasetsID}}/tables/{{tableID}}\".",
+                            "type": "string"
+                          },
+                          "name": {
+                            "description": "The name of a BigQueryTable resource.",
+                            "type": "string"
+                          },
+                          "namespace": {
+                            "description": "The namespace of a BigQueryTable resource.",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object",
+                        "additionalProperties": false
                       }
                     },
                     "type": "object",

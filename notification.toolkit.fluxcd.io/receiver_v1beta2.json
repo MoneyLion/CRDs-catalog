@@ -48,7 +48,12 @@
                   "ImageRepository",
                   "ImagePolicy",
                   "ImageUpdateAutomation",
-                  "OCIRepository"
+                  "OCIRepository",
+                  "ArtifactGenerator",
+                  "ExternalArtifact",
+                  "FluxInstance",
+                  "ResourceSet",
+                  "ResourceSetInputProvider"
                 ],
                 "type": "string"
               },

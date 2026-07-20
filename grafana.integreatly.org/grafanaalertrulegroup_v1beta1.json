@@ -18,8 +18,6 @@
         "allowCrossNamespaceImport": {
           "default": false,
           "description": "Allow the Operator to match this resource with Grafanas outside the current namespace",
-          "default": false,
-          "description": "Allow the Operator to match this resource with Grafanas outside the current namespace",
           "type": "boolean"
         },
         "editable": {
@@ -34,14 +32,25 @@
         },
         "folderRef": {
           "description": "Match GrafanaFolders CRs to infer the uid",
-          "type": "string"
+          "type": "string",
+          "x-kubernetes-validations": [
+            {
+              "message": "Value is immutable",
+              "rule": "self == oldSelf"
+            }
+          ]
         },
         "folderUID": {
           "description": "UID of the folder containing this rule group\nOverrides the FolderSelector",
-          "type": "string"
+          "type": "string",
+          "x-kubernetes-validations": [
+            {
+              "message": "Value is immutable",
+              "rule": "self == oldSelf"
+            }
+          ]
         },
         "instanceSelector": {
-          "description": "Selects Grafana instances for import",
           "description": "Selects Grafana instances for import",
           "properties": {
             "matchExpressions": {
@@ -89,7 +98,6 @@
           "x-kubernetes-validations": [
             {
               "message": "spec.instanceSelector is immutable",
-              "message": "spec.instanceSelector is immutable",
               "rule": "self == oldSelf"
             }
           ],
@@ -105,7 +113,6 @@
           "type": "string"
         },
         "resyncPeriod": {
-          "default": "10m0s",
           "description": "How often the resource is synced, defaults to 10m0s if not set",
           "pattern": "^([0-9]+(\\.[0-9]+)?(ns|us|\u00b5s|ms|s|m|h))+$",
           "type": "string"
@@ -121,6 +128,10 @@
                 "type": "object"
               },
               "condition": {
+                "type": "string"
+              },
+              "dashboardUid": {
+                "description": "Deprecated: The field is not used, use rules[].annotations.__dashboardUid__",
                 "type": "string"
               },
               "data": {
@@ -175,18 +186,28 @@
                 "type": "string"
               },
               "for": {
-                "format": "duration",
-                "pattern": "^([0-9]+(\\.[0-9]+)?(ns|us|\u00b5s|ms|s|m|h))+$",
+                "default": "0s",
+                "pattern": "^([0-9]+(\\.[0-9]+)?(s|m|h|d|w))+$",
                 "type": "string"
               },
               "isPaused": {
                 "type": "boolean"
+              },
+              "keepFiringFor": {
+                "format": "duration",
+                "pattern": "^([0-9]+(\\.[0-9]+)?(ns|us|\u00b5s|ms|s|m|h))+$",
+                "type": "string"
               },
               "labels": {
                 "additionalProperties": {
                   "type": "string"
                 },
                 "type": "object"
+              },
+              "missingSeriesEvalsToResolve": {
+                "description": "The number of missing series evaluations that must occur before the rule is considered to be resolved.",
+                "format": "int64",
+                "type": "integer"
               },
               "noDataState": {
                 "enum": [
@@ -199,28 +220,42 @@
               },
               "notificationSettings": {
                 "properties": {
+                  "active_time_intervals": {
+                    "description": "ActiveTimeIntervals defines the time intervals during which notifications should NOT be muted.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
                   "group_by": {
+                    "description": "GroupBy defines the labels by which incoming alerts are grouped together.",
                     "items": {
                       "type": "string"
                     },
                     "type": "array"
                   },
                   "group_interval": {
+                    "description": "GroupInterval defines how long to wait before sending a notification about new alerts added\nto a group for which an initial notification has already been sent. (e.g. 5m)",
                     "type": "string"
                   },
                   "group_wait": {
+                    "description": "GroupWait defines how long to initially wait to send a notification for a group of alerts. (e.g. 30s)",
                     "type": "string"
                   },
                   "mute_time_intervals": {
+                    "description": "MuteTimeIntervals defines the time intervals during which notifications should be muted.\nThese must match the name of a mute time interval defined in the Alertmanager configuration.",
                     "items": {
                       "type": "string"
                     },
                     "type": "array"
                   },
                   "receiver": {
+                    "description": "Receiver is the name of the receiver to send notifications to.",
+                    "minLength": 1,
                     "type": "string"
                   },
                   "repeat_interval": {
+                    "description": "RepeatInterval defines how long to wait before sending a notification again if it has already\nbeen sent successfully for an alert. (e.g. 4h)\nShould not be less than GroupInterval.",
                     "type": "string"
                   }
                 },
@@ -230,12 +265,19 @@
                 "type": "object",
                 "additionalProperties": false
               },
+              "panelId": {
+                "description": "Deprecated: The field is not used, use rules[].annotations.__panelId__",
+                "type": "integer"
+              },
               "record": {
                 "properties": {
                   "from": {
                     "type": "string"
                   },
                   "metric": {
+                    "type": "string"
+                  },
+                  "targetDatasourceUid": {
                     "type": "string"
                   }
                 },
@@ -271,7 +313,12 @@
             "type": "object",
             "additionalProperties": false
           },
+          "minItems": 1,
           "type": "array"
+        },
+        "suspend": {
+          "description": "Suspend pauses synchronizing attempts and tells the operator to ignore changes",
+          "type": "boolean"
         }
       },
       "required": [
@@ -282,7 +329,7 @@
       "type": "object",
       "x-kubernetes-validations": [
         {
-          "message": "Only one of FolderUID or FolderRef can be set",
+          "message": "Only one of FolderUID or FolderRef can be set and one must be defined",
           "rule": "(has(self.folderUID) && !(has(self.folderRef))) || (has(self.folderRef) && !(has(self.folderUID)))"
         },
         {
@@ -290,12 +337,12 @@
           "rule": "((!has(oldSelf.editable) && !has(self.editable)) || (has(oldSelf.editable) && has(self.editable)))"
         },
         {
-          "message": "disabling spec.allowCrossNamespaceImport requires a recreate to ensure desired state",
-          "rule": "!oldSelf.allowCrossNamespaceImport || (oldSelf.allowCrossNamespaceImport && self.allowCrossNamespaceImport)"
+          "message": "spec.folderUID is immutable",
+          "rule": "((!has(oldSelf.folderUID) && !has(self.folderUID)) || (has(oldSelf.folderUID) && has(self.folderUID)))"
         },
         {
-          "message": "spec.editable is immutable",
-          "rule": "((!has(oldSelf.editable) && !has(self.editable)) || (has(oldSelf.editable) && has(self.editable)))"
+          "message": "spec.folderRef is immutable",
+          "rule": "((!has(oldSelf.folderRef) && !has(self.folderRef)) || (has(oldSelf.folderRef) && has(self.folderRef)))"
         },
         {
           "message": "disabling spec.allowCrossNamespaceImport requires a recreate to ensure desired state",
@@ -306,11 +353,9 @@
     },
     "status": {
       "description": "The most recent observed state of a Grafana resource",
-      "description": "The most recent observed state of a Grafana resource",
       "properties": {
         "conditions": {
-          "description": "Results when synchonizing resource with Grafana instances",
-          "description": "Results when synchonizing resource with Grafana instances",
+          "description": "Results when synchronizing resource with Grafana instances",
           "items": {
             "description": "Condition contains details for one aspect of the current state of this API Resource.",
             "properties": {
@@ -364,11 +409,6 @@
             "additionalProperties": false
           },
           "type": "array"
-        },
-        "lastResync": {
-          "description": "Last time the resource was synchronized with Grafana instances",
-          "format": "date-time",
-          "type": "string"
         },
         "lastResync": {
           "description": "Last time the resource was synchronized with Grafana instances",
