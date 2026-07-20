@@ -291,7 +291,7 @@
                         "type": "array"
                       },
                       "secrets": {
-                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets must live in the Kyverno namespace.",
+                        "description": "Secrets specifies a list of secrets that are provided for credentials.\nSecrets can be specified as a name (Kyverno namespace) or namespace/name.\nimagePullSecrets from the resource namespace are also used.",
                         "items": {
                           "type": "string"
                         },
@@ -347,6 +347,15 @@
             "additionalProperties": false
           },
           "type": "array"
+        },
+        "deletionPropagationPolicy": {
+          "description": "DeletionPropagationPolicy defines how resources will be deleted (Foreground, Background, Orphan).",
+          "enum": [
+            "Foreground",
+            "Background",
+            "Orphan"
+          ],
+          "type": "string"
         },
         "exclude": {
           "description": "ExcludeResources defines when cleanuppolicy should not be applied. The exclude\ncriteria can include resource information (e.g. kind, name, namespace, labels)\nand admission review request information like the name or role.",

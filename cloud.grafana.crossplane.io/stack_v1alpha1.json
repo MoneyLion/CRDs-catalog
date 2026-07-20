@@ -26,6 +26,10 @@
         },
         "forProvider": {
           "properties": {
+            "deleteProtection": {
+              "description": "(Boolean) Whether to enable delete protection for the stack, preventing accidental deletion. Defaults to true.\nWhether to enable delete protection for the stack, preventing accidental deletion. Defaults to `true`.",
+              "type": "boolean"
+            },
             "description": {
               "description": "(String) Description of stack.\nDescription of stack.",
               "type": "string"
@@ -34,7 +38,7 @@
               "additionalProperties": {
                 "type": "string"
               },
-              "description": "zA-Z0-9/\\-.]+$\" and stacks cannot have more than 10 labels.\nA map of labels to assign to the stack. Label keys and values must match the following regexp: \"^[a-zA-Z0-9/\\\\-.]+$\" and stacks cannot have more than 10 labels.",
+              "description": "zA-Z0-9/\\-._]+$\" and stacks cannot have more than 10 labels.\nA map of labels to assign to the stack. Label keys and values must match the following regexp: \"^[a-zA-Z0-9/\\\\-._]+$\" and stacks cannot have more than 10 labels.",
               "type": "object",
               "x-kubernetes-map-type": "granular"
             },
@@ -69,6 +73,10 @@
         "initProvider": {
           "description": "THIS IS A BETA FIELD. It will be honored\nunless the Management Policies feature flag is disabled.\nInitProvider holds the same fields as ForProvider, with the exception\nof Identifier and other resource reference fields. The fields that are\nin InitProvider are merged into ForProvider when the resource is created.\nThe same fields are also added to the terraform ignore_changes hook, to\navoid updating them after creation. This is useful for fields that are\nrequired on creation, but we do not desire to update them after creation,\nfor example because of an external controller is managing them, like an\nautoscaler.",
           "properties": {
+            "deleteProtection": {
+              "description": "(Boolean) Whether to enable delete protection for the stack, preventing accidental deletion. Defaults to true.\nWhether to enable delete protection for the stack, preventing accidental deletion. Defaults to `true`.",
+              "type": "boolean"
+            },
             "description": {
               "description": "(String) Description of stack.\nDescription of stack.",
               "type": "string"
@@ -77,7 +85,7 @@
               "additionalProperties": {
                 "type": "string"
               },
-              "description": "zA-Z0-9/\\-.]+$\" and stacks cannot have more than 10 labels.\nA map of labels to assign to the stack. Label keys and values must match the following regexp: \"^[a-zA-Z0-9/\\\\-.]+$\" and stacks cannot have more than 10 labels.",
+              "description": "zA-Z0-9/\\-._]+$\" and stacks cannot have more than 10 labels.\nA map of labels to assign to the stack. Label keys and values must match the following regexp: \"^[a-zA-Z0-9/\\\\-._]+$\" and stacks cannot have more than 10 labels.",
               "type": "object",
               "x-kubernetes-map-type": "granular"
             },
@@ -169,88 +177,8 @@
           "type": "object",
           "additionalProperties": false
         },
-        "publishConnectionDetailsTo": {
-          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
-          "properties": {
-            "configRef": {
-              "default": {
-                "name": "default"
-              },
-              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
-              "properties": {
-                "name": {
-                  "description": "Name of the referenced object.",
-                  "type": "string"
-                },
-                "policy": {
-                  "description": "Policies for referencing.",
-                  "properties": {
-                    "resolution": {
-                      "default": "Required",
-                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
-                      "enum": [
-                        "Required",
-                        "Optional"
-                      ],
-                      "type": "string"
-                    },
-                    "resolve": {
-                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
-                      "enum": [
-                        "Always",
-                        "IfNotPresent"
-                      ],
-                      "type": "string"
-                    }
-                  },
-                  "type": "object",
-                  "additionalProperties": false
-                }
-              },
-              "required": [
-                "name"
-              ],
-              "type": "object",
-              "additionalProperties": false
-            },
-            "metadata": {
-              "description": "Metadata is the metadata for connection secret.",
-              "properties": {
-                "annotations": {
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
-                  "type": "object"
-                },
-                "labels": {
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
-                  "type": "object"
-                },
-                "type": {
-                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
-                  "type": "string"
-                }
-              },
-              "type": "object",
-              "additionalProperties": false
-            },
-            "name": {
-              "description": "Name is the name of the connection secret.",
-              "type": "string"
-            }
-          },
-          "required": [
-            "name"
-          ],
-          "type": "object",
-          "additionalProperties": false
-        },
         "writeConnectionSecretToRef": {
-          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
           "properties": {
             "name": {
               "description": "Name of the secret.",
@@ -290,6 +218,10 @@
       "properties": {
         "atProvider": {
           "properties": {
+            "alertmanagerIpAllowListCname": {
+              "description": "separated list of CNAMEs that can be whitelisted to access the Alertmanager instances\nComma-separated list of CNAMEs that can be whitelisted to access the Alertmanager instances (Optional)",
+              "type": "string"
+            },
             "alertmanagerName": {
               "description": "(String) Name of the Alertmanager instance configured for this stack.\nName of the Alertmanager instance configured for this stack.",
               "type": "string"
@@ -306,12 +238,114 @@
               "description": "(Number) User ID of the Alertmanager instance configured for this stack.\nUser ID of the Alertmanager instance configured for this stack.",
               "type": "number"
             },
+            "cloudProviderUrl": {
+              "description": "(String) Base URL of the Cloud Provider API for this stack's cluster. This can be used with the cloud_provider_url provider config option to manage Cloud Provider resources for this stack.\nBase URL of the Cloud Provider API for this stack's cluster. This can be used with the `cloud_provider_url` provider config option to manage Cloud Provider resources for this stack.",
+              "type": "string"
+            },
+            "clusterName": {
+              "description": "(String) Name of the cluster where this stack resides.\nName of the cluster where this stack resides.",
+              "type": "string"
+            },
+            "clusterSlug": {
+              "description": "(String) Slug of the cluster where this stack resides.\nSlug of the cluster where this stack resides.",
+              "type": "string"
+            },
+            "connectionsApiUrl": {
+              "description": "(String) Base URL of the Connections API for this stack's cluster. This can be used with the connections_api_url provider config option to manage Connections resources for this stack.\nBase URL of the Connections API for this stack's cluster. This can be used with the `connections_api_url` provider config option to manage Connections resources for this stack.",
+              "type": "string"
+            },
+            "deleteProtection": {
+              "description": "(Boolean) Whether to enable delete protection for the stack, preventing accidental deletion. Defaults to true.\nWhether to enable delete protection for the stack, preventing accidental deletion. Defaults to `true`.",
+              "type": "boolean"
+            },
             "description": {
               "description": "(String) Description of stack.\nDescription of stack.",
               "type": "string"
             },
+            "fleetManagementName": {
+              "description": "(String) Name of the Fleet Management instance configured for this stack.\nName of the Fleet Management instance configured for this stack.",
+              "type": "string"
+            },
+            "fleetManagementPrivateConnectivityInfoAvailabilityZoneIds": {
+              "description": "(List of String) Availability Zone IDs for Fleet Management when using AWS PrivateLink (only for AWS stacks)\nAvailability Zone IDs for Fleet Management when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "fleetManagementPrivateConnectivityInfoAvailabilityZones": {
+              "description": "(List of String) Availability Zones for Fleet Management when using AWS PrivateLink (only for AWS stacks)\nAvailability Zones for Fleet Management when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "fleetManagementPrivateConnectivityInfoPrivateDns": {
+              "description": "(String) Private DNS for Fleet Management when using AWS PrivateLink (only for AWS stacks)\nPrivate DNS for Fleet Management when using AWS PrivateLink (only for AWS stacks)",
+              "type": "string"
+            },
+            "fleetManagementPrivateConnectivityInfoRegions": {
+              "description": "(List of String) Regions for Fleet Management when using AWS PrivateLink (only for AWS stacks)\nRegions for Fleet Management when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "fleetManagementPrivateConnectivityInfoServiceName": {
+              "description": "(String) Service Name for Fleet Management when using AWS PrivateLink (only for AWS stacks)\nService Name for Fleet Management when using AWS PrivateLink (only for AWS stacks)",
+              "type": "string"
+            },
+            "fleetManagementStatus": {
+              "description": "(String) Status of the Fleet Management instance configured for this stack.\nStatus of the Fleet Management instance configured for this stack.",
+              "type": "string"
+            },
+            "fleetManagementUrl": {
+              "description": "(String) Base URL of the Fleet Management instance configured for this stack.\nBase URL of the Fleet Management instance configured for this stack.",
+              "type": "string"
+            },
+            "fleetManagementUserId": {
+              "description": "(Number) User ID of the Fleet Management instance configured for this stack.\nUser ID of the Fleet Management instance configured for this stack.",
+              "type": "number"
+            },
+            "grafanasIpAllowListCname": {
+              "description": "separated list of CNAMEs that can be whitelisted to access the grafana instance\nComma-separated list of CNAMEs that can be whitelisted to access the grafana instance (Optional)",
+              "type": "string"
+            },
+            "graphiteIpAllowListCname": {
+              "description": "separated list of CNAMEs that can be whitelisted to access the Graphite instance\nComma-separated list of CNAMEs that can be whitelisted to access the Graphite instance (Optional)",
+              "type": "string"
+            },
             "graphiteName": {
               "description": "(String)",
+              "type": "string"
+            },
+            "graphitePrivateConnectivityInfoAvailabilityZoneIds": {
+              "description": "(List of String) Availability Zone IDs for Graphite when using AWS PrivateLink (only for AWS stacks)\nAvailability Zone IDs for Graphite when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "graphitePrivateConnectivityInfoAvailabilityZones": {
+              "description": "(List of String) Availability Zones for Graphite when using AWS PrivateLink (only for AWS stacks)\nAvailability Zones for Graphite when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "graphitePrivateConnectivityInfoPrivateDns": {
+              "description": "(String) Private DNS for Graphite when using AWS PrivateLink (only for AWS stacks)\nPrivate DNS for Graphite when using AWS PrivateLink (only for AWS stacks)",
+              "type": "string"
+            },
+            "graphitePrivateConnectivityInfoRegions": {
+              "description": "(List of String) Regions for Graphite when using AWS PrivateLink (only for AWS stacks)\nRegions for Graphite when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "graphitePrivateConnectivityInfoServiceName": {
+              "description": "(String) Service Name for Graphite when using AWS PrivateLink (only for AWS stacks)\nService Name for Graphite when using AWS PrivateLink (only for AWS stacks)",
               "type": "string"
             },
             "graphiteStatus": {
@@ -330,16 +364,53 @@
               "description": "(String) The stack id assigned to this stack by Grafana.",
               "type": "string"
             },
+            "influxUrl": {
+              "description": "cloud/send-data/metrics/metrics-influxdb/push-from-telegraf/ for docs on how to use this.\nBase URL of the InfluxDB instance configured for this stack. The username is the same as the metrics' (`prometheus_user_id` attribute of this resource). See https://grafana.com/docs/grafana-cloud/send-data/metrics/metrics-influxdb/push-from-telegraf/ for docs on how to use this.",
+              "type": "string"
+            },
             "labels": {
               "additionalProperties": {
                 "type": "string"
               },
-              "description": "zA-Z0-9/\\-.]+$\" and stacks cannot have more than 10 labels.\nA map of labels to assign to the stack. Label keys and values must match the following regexp: \"^[a-zA-Z0-9/\\\\-.]+$\" and stacks cannot have more than 10 labels.",
+              "description": "zA-Z0-9/\\-._]+$\" and stacks cannot have more than 10 labels.\nA map of labels to assign to the stack. Label keys and values must match the following regexp: \"^[a-zA-Z0-9/\\\\-._]+$\" and stacks cannot have more than 10 labels.",
               "type": "object",
               "x-kubernetes-map-type": "granular"
             },
+            "logsIpAllowListCname": {
+              "description": "separated list of CNAMEs that can be whitelisted to access the Logs instance\nComma-separated list of CNAMEs that can be whitelisted to access the Logs instance (Optional)",
+              "type": "string"
+            },
             "logsName": {
               "description": "(String)",
+              "type": "string"
+            },
+            "logsPrivateConnectivityInfoAvailabilityZoneIds": {
+              "description": "(List of String) Availability Zone IDs for Logs when using AWS PrivateLink (only for AWS stacks)\nAvailability Zone IDs for Logs when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "logsPrivateConnectivityInfoAvailabilityZones": {
+              "description": "(List of String) Availability Zones for Logs when using AWS PrivateLink (only for AWS stacks)\nAvailability Zones for Logs when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "logsPrivateConnectivityInfoPrivateDns": {
+              "description": "(String) Private DNS for Logs when using AWS PrivateLink (only for AWS stacks)\nPrivate DNS for Logs when using AWS PrivateLink (only for AWS stacks)",
+              "type": "string"
+            },
+            "logsPrivateConnectivityInfoRegions": {
+              "description": "(List of String) Regions for Logs when using AWS PrivateLink (only for AWS stacks)\nRegions for Logs when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "logsPrivateConnectivityInfoServiceName": {
+              "description": "(String) Service Name for Logs when using AWS PrivateLink (only for AWS stacks)\nService Name for Logs when using AWS PrivateLink (only for AWS stacks)",
               "type": "string"
             },
             "logsStatus": {
@@ -358,6 +429,10 @@
               "description": "(String) Name of stack. Conventionally matches the url of the instance (e.g. <stack_slug>.grafana.net).\nName of stack. Conventionally matches the url of the instance (e.g. `<stack_slug>.grafana.net`).",
               "type": "string"
             },
+            "oncallApiUrl": {
+              "description": "(String) Base URL of the OnCall API instance configured for this stack.\nBase URL of the OnCall API instance configured for this stack.",
+              "type": "string"
+            },
             "orgId": {
               "description": "(Number) Organization id to assign to this stack.\nOrganization id to assign to this stack.",
               "type": "number"
@@ -370,12 +445,132 @@
               "description": "(String) Organization slug to assign to this stack.\nOrganization slug to assign to this stack.",
               "type": "string"
             },
+            "otlpPrivateConnectivityInfoAvailabilityZoneIds": {
+              "description": "(List of String) Availability Zone IDs for OTLP when using AWS PrivateLink (only for AWS stacks)\nAvailability Zone IDs for OTLP when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "otlpPrivateConnectivityInfoAvailabilityZones": {
+              "description": "(List of String) Availability Zones for OTLP when using AWS PrivateLink (only for AWS stacks)\nAvailability Zones for OTLP when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "otlpPrivateConnectivityInfoPrivateDns": {
+              "description": "(String) Private DNS for OTLP when using AWS PrivateLink (only for AWS stacks)\nPrivate DNS for OTLP when using AWS PrivateLink (only for AWS stacks)",
+              "type": "string"
+            },
+            "otlpPrivateConnectivityInfoRegions": {
+              "description": "(List of String) Regions for OTLP when using AWS PrivateLink (only for AWS stacks)\nRegions for OTLP when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "otlpPrivateConnectivityInfoServiceName": {
+              "description": "(String) Service Name for OTLP when using AWS PrivateLink (only for AWS stacks)\nService Name for OTLP when using AWS PrivateLink (only for AWS stacks)",
+              "type": "string"
+            },
             "otlpUrl": {
-              "description": "cloud/send-data/otlp/send-data-otlp/ for docs on how to use this.\nBase URL of the OTLP instance configured for this stack. See https://grafana.com/docs/grafana-cloud/send-data/otlp/send-data-otlp/ for docs on how to use this.",
+              "description": "cloud/send-data/otlp/send-data-otlp/ for docs on how to use this.\nBase URL of the OTLP instance configured for this stack. The username is the stack's ID (`id` attribute of this resource). See https://grafana.com/docs/grafana-cloud/send-data/otlp/send-data-otlp/ for docs on how to use this.",
+              "type": "string"
+            },
+            "pdcApiPrivateConnectivityInfoAvailabilityZoneIds": {
+              "description": "(List of String) Availability Zone IDs for PDC's API when using AWS PrivateLink (only for AWS stacks)\nAvailability Zone IDs for PDC's API when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "pdcApiPrivateConnectivityInfoAvailabilityZones": {
+              "description": "(List of String) Availability Zones for PDC's API when using AWS PrivateLink (only for AWS stacks)\nAvailability Zones for PDC's API when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "pdcApiPrivateConnectivityInfoPrivateDns": {
+              "description": "(String) Private DNS for PDC's API when using AWS PrivateLink (only for AWS stacks)\nPrivate DNS for PDC's API when using AWS PrivateLink (only for AWS stacks)",
+              "type": "string"
+            },
+            "pdcApiPrivateConnectivityInfoRegions": {
+              "description": "(List of String) Regions for PDC's API when using AWS PrivateLink (only for AWS stacks)\nRegions for PDC's API when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "pdcApiPrivateConnectivityInfoServiceName": {
+              "description": "(String) Service Name for PDC's API when using AWS PrivateLink (only for AWS stacks)\nService Name for PDC's API when using AWS PrivateLink (only for AWS stacks)",
+              "type": "string"
+            },
+            "pdcGatewayPrivateConnectivityInfoAvailabilityZoneIds": {
+              "description": "(List of String) Availability Zone IDs for PDC's Gateway when using AWS PrivateLink (only for AWS stacks)\nAvailability Zone IDs for PDC's Gateway when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "pdcGatewayPrivateConnectivityInfoAvailabilityZones": {
+              "description": "(List of String) Availability Zones for PDC's Gateway when using AWS PrivateLink (only for AWS stacks)\nAvailability Zones for PDC's Gateway when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "pdcGatewayPrivateConnectivityInfoPrivateDns": {
+              "description": "(String) Private DNS for PDC's Gateway when using AWS PrivateLink (only for AWS stacks)\nPrivate DNS for PDC's Gateway when using AWS PrivateLink (only for AWS stacks)",
+              "type": "string"
+            },
+            "pdcGatewayPrivateConnectivityInfoRegions": {
+              "description": "(List of String) Regions for PDC's Gateway when using AWS PrivateLink (only for AWS stacks)\nRegions for PDC's Gateway when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "pdcGatewayPrivateConnectivityInfoServiceName": {
+              "description": "(String) Service Name for PDC's Gateway when using AWS PrivateLink (only for AWS stacks)\nService Name for PDC's Gateway when using AWS PrivateLink (only for AWS stacks)",
+              "type": "string"
+            },
+            "profilesIpAllowListCname": {
+              "description": "separated list of CNAMEs that can be whitelisted to access the Profiles instance\nComma-separated list of CNAMEs that can be whitelisted to access the Profiles instance (Optional)",
               "type": "string"
             },
             "profilesName": {
               "description": "(String)",
+              "type": "string"
+            },
+            "profilesPrivateConnectivityInfoAvailabilityZoneIds": {
+              "description": "(List of String) Availability Zone IDs for Profiles when using AWS PrivateLink (only for AWS stacks)\nAvailability Zone IDs for Profiles when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "profilesPrivateConnectivityInfoAvailabilityZones": {
+              "description": "(List of String) Availability Zones for Profiles when using AWS PrivateLink (only for AWS stacks)\nAvailability Zones for Profiles when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "profilesPrivateConnectivityInfoPrivateDns": {
+              "description": "(String) Private DNS for Profiles when using AWS PrivateLink (only for AWS stacks)\nPrivate DNS for Profiles when using AWS PrivateLink (only for AWS stacks)",
+              "type": "string"
+            },
+            "profilesPrivateConnectivityInfoRegions": {
+              "description": "(List of String) Regions for Profiles when using AWS PrivateLink (only for AWS stacks)\nRegions for Profiles when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "profilesPrivateConnectivityInfoServiceName": {
+              "description": "(String) Service Name for Profiles when using AWS PrivateLink (only for AWS stacks)\nService Name for Profiles when using AWS PrivateLink (only for AWS stacks)",
               "type": "string"
             },
             "profilesStatus": {
@@ -390,8 +585,41 @@
               "description": "(Number)",
               "type": "number"
             },
+            "prometheusIpAllowListCname": {
+              "description": "separated list of CNAMEs that can be whitelisted to access the Prometheus instance\nComma-separated list of CNAMEs that can be whitelisted to access the Prometheus instance (Optional)",
+              "type": "string"
+            },
             "prometheusName": {
               "description": "(String) Prometheus name for this instance.\nPrometheus name for this instance.",
+              "type": "string"
+            },
+            "prometheusPrivateConnectivityInfoAvailabilityZoneIds": {
+              "description": "(List of String) Availability Zone IDs for Prometheus when using AWS PrivateLink (only for AWS stacks)\nAvailability Zone IDs for Prometheus when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "prometheusPrivateConnectivityInfoAvailabilityZones": {
+              "description": "(List of String) Availability Zones for Prometheus when using AWS PrivateLink (only for AWS stacks)\nAvailability Zones for Prometheus when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "prometheusPrivateConnectivityInfoPrivateDns": {
+              "description": "(String) Private DNS for Prometheus when using AWS PrivateLink (only for AWS stacks)\nPrivate DNS for Prometheus when using AWS PrivateLink (only for AWS stacks)",
+              "type": "string"
+            },
+            "prometheusPrivateConnectivityInfoRegions": {
+              "description": "(List of String) Regions for Prometheus when using AWS PrivateLink (only for AWS stacks)\nRegions for Prometheus when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "prometheusPrivateConnectivityInfoServiceName": {
+              "description": "(String) Service Name for Prometheus when using AWS PrivateLink (only for AWS stacks)\nService Name for Prometheus when using AWS PrivateLink (only for AWS stacks)",
               "type": "string"
             },
             "prometheusRemoteEndpoint": {
@@ -422,12 +650,49 @@
               "description": "(String) Subdomain that the Grafana instance will be available at. Setting slug to <stack_slug> will make the instance available at https://<stack_slug>.grafana.net.\nSubdomain that the Grafana instance will be available at. Setting slug to `<stack_slug>` will make the instance available at `https://<stack_slug>.grafana.net`.",
               "type": "string"
             },
+            "smUrl": {
+              "description": "(String) Base URL of the Synthetic Monitoring API for this stack's region. This can be used with the sm_url provider config option. Note: Synthetic Monitoring requires activation either via the grafana_synthetic_monitoring_installation resource or manually in the Grafana Cloud UI before it can be used.\nBase URL of the Synthetic Monitoring API for this stack's region. This can be used with the `sm_url` provider config option. Note: Synthetic Monitoring requires activation either via the `grafana_synthetic_monitoring_installation` resource or manually in the Grafana Cloud UI before it can be used.",
+              "type": "string"
+            },
             "status": {
               "description": "(String) Status of the stack.\nStatus of the stack.",
               "type": "string"
             },
+            "tracesIpAllowListCname": {
+              "description": "separated list of CNAMEs that can be whitelisted to access the Traces instance\nComma-separated list of CNAMEs that can be whitelisted to access the Traces instance (Optional)",
+              "type": "string"
+            },
             "tracesName": {
               "description": "(String)",
+              "type": "string"
+            },
+            "tracesPrivateConnectivityInfoAvailabilityZoneIds": {
+              "description": "(List of String) Availability Zone IDs for Traces when using AWS PrivateLink (only for AWS stacks)\nAvailability Zone IDs for Traces when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "tracesPrivateConnectivityInfoAvailabilityZones": {
+              "description": "(List of String) Availability Zones for Traces when using AWS PrivateLink (only for AWS stacks)\nAvailability Zones for Traces when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "tracesPrivateConnectivityInfoPrivateDns": {
+              "description": "(String) Private DNS for Traces when using AWS PrivateLink (only for AWS stacks)\nPrivate DNS for Traces when using AWS PrivateLink (only for AWS stacks)",
+              "type": "string"
+            },
+            "tracesPrivateConnectivityInfoRegions": {
+              "description": "(List of String) Regions for Traces when using AWS PrivateLink (only for AWS stacks)\nRegions for Traces when using AWS PrivateLink (only for AWS stacks)",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "tracesPrivateConnectivityInfoServiceName": {
+              "description": "(String) Service Name for Traces when using AWS PrivateLink (only for AWS stacks)\nService Name for Traces when using AWS PrivateLink (only for AWS stacks)",
               "type": "string"
             },
             "tracesStatus": {

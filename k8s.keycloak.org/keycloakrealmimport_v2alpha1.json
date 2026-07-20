@@ -6,6 +6,13 @@
           "description": "The name of the Keycloak CR to reference, in the same namespace.",
           "type": "string"
         },
+        "labels": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Optionally set to add additional labels to the Job created for the import.",
+          "type": "object"
+        },
         "placeholders": {
           "additionalProperties": {
             "properties": {
@@ -103,6 +110,18 @@
                         "resourceTypes": {
                           "additionalProperties": {
                             "properties": {
+                              "groupType": {
+                                "type": "string"
+                              },
+                              "scopeAliases": {
+                                "additionalProperties": {
+                                  "items": {
+                                    "type": "string"
+                                  },
+                                  "type": "array"
+                                },
+                                "type": "object"
+                              },
                               "scopes": {
                                 "items": {
                                   "type": "string"
@@ -648,6 +667,18 @@
                           "resourceTypes": {
                             "additionalProperties": {
                               "properties": {
+                                "groupType": {
+                                  "type": "string"
+                                },
+                                "scopeAliases": {
+                                  "additionalProperties": {
+                                    "items": {
+                                      "type": "string"
+                                    },
+                                    "type": "array"
+                                  },
+                                  "type": "object"
+                                },
                                 "scopes": {
                                   "items": {
                                     "type": "string"
@@ -1502,6 +1533,18 @@
                           "resourceTypes": {
                             "additionalProperties": {
                               "properties": {
+                                "groupType": {
+                                  "type": "string"
+                                },
+                                "scopeAliases": {
+                                  "additionalProperties": {
+                                    "items": {
+                                      "type": "string"
+                                    },
+                                    "type": "array"
+                                  },
+                                  "type": "object"
+                                },
                                 "scopes": {
                                   "items": {
                                     "type": "string"
@@ -2579,6 +2622,9 @@
                         "digits": {
                           "type": "integer"
                         },
+                        "federationLink": {
+                          "type": "string"
+                        },
                         "hashIterations": {
                           "type": "integer"
                         },
@@ -2725,6 +2771,9 @@
                               },
                               "type": "object"
                             },
+                            "defaultValue": {
+                              "type": "string"
+                            },
                             "displayName": {
                               "type": "string"
                             },
@@ -2825,6 +2874,9 @@
                     },
                     "type": "object"
                   },
+                  "description": {
+                    "type": "string"
+                  },
                   "id": {
                     "type": "string"
                   },
@@ -2872,6 +2924,9 @@
                             "type": "array"
                           },
                           "type": "object"
+                        },
+                        "description": {
+                          "type": "string"
                         },
                         "id": {
                           "type": "string"
@@ -2921,6 +2976,9 @@
                                 },
                                 "type": "object"
                               },
+                              "description": {
+                                "type": "string"
+                              },
                               "id": {
                                 "type": "string"
                               },
@@ -2968,6 +3026,9 @@
                                         "type": "array"
                                       },
                                       "type": "object"
+                                    },
+                                    "description": {
+                                      "type": "string"
                                     },
                                     "id": {
                                       "type": "string"
@@ -3017,6 +3078,9 @@
                                             },
                                             "type": "object"
                                           },
+                                          "description": {
+                                            "type": "string"
+                                          },
                                           "id": {
                                             "type": "string"
                                           },
@@ -3064,6 +3128,9 @@
                                                     "type": "array"
                                                   },
                                                   "type": "object"
+                                                },
+                                                "description": {
+                                                  "type": "string"
                                                 },
                                                 "id": {
                                                   "type": "string"
@@ -3113,6 +3180,9 @@
                                                         },
                                                         "type": "object"
                                                       },
+                                                      "description": {
+                                                        "type": "string"
+                                                      },
                                                       "id": {
                                                         "type": "string"
                                                       },
@@ -3160,6 +3230,9 @@
                                                                 "type": "array"
                                                               },
                                                               "type": "object"
+                                                            },
+                                                            "description": {
+                                                              "type": "string"
                                                             },
                                                             "id": {
                                                               "type": "string"
@@ -3209,6 +3282,9 @@
                                                                     },
                                                                     "type": "object"
                                                                   },
+                                                                  "description": {
+                                                                    "type": "string"
+                                                                  },
                                                                   "id": {
                                                                     "type": "string"
                                                                   },
@@ -3257,6 +3333,9 @@
                                                                           },
                                                                           "type": "object"
                                                                         },
+                                                                        "description": {
+                                                                          "type": "string"
+                                                                        },
                                                                         "id": {
                                                                           "type": "string"
                                                                         },
@@ -3304,6 +3383,9 @@
                                                                                   "type": "array"
                                                                                 },
                                                                                 "type": "object"
+                                                                              },
+                                                                              "description": {
+                                                                                "type": "string"
                                                                               },
                                                                               "id": {
                                                                                 "type": "string"
@@ -3473,6 +3555,12 @@
                   "trustEmail": {
                     "type": "boolean"
                   },
+                  "types": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
                   "updateProfileFirstLoginMode": {
                     "type": "string"
                   }
@@ -3507,6 +3595,9 @@
               "type": "integer"
             },
             "maxFailureWaitSeconds": {
+              "type": "integer"
+            },
+            "maxSecondaryAuthFailures": {
               "type": "integer"
             },
             "maxTemporaryLockouts": {
@@ -3564,6 +3655,18 @@
                           "resourceTypes": {
                             "additionalProperties": {
                               "properties": {
+                                "groupType": {
+                                  "type": "string"
+                                },
+                                "scopeAliases": {
+                                  "additionalProperties": {
+                                    "items": {
+                                      "type": "string"
+                                    },
+                                    "type": "array"
+                                  },
+                                  "type": "object"
+                                },
                                 "scopes": {
                                   "items": {
                                     "type": "string"
@@ -4116,6 +4219,633 @@
                   "enabled": {
                     "type": "boolean"
                   },
+                  "groups": {
+                    "items": {
+                      "properties": {
+                        "access": {
+                          "additionalProperties": {
+                            "type": "boolean"
+                          },
+                          "type": "object"
+                        },
+                        "attributes": {
+                          "additionalProperties": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          "type": "object"
+                        },
+                        "clientRoles": {
+                          "additionalProperties": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          "type": "object"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "parentId": {
+                          "type": "string"
+                        },
+                        "path": {
+                          "type": "string"
+                        },
+                        "realmRoles": {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
+                        },
+                        "subGroupCount": {
+                          "type": "integer"
+                        },
+                        "subGroups": {
+                          "items": {
+                            "properties": {
+                              "access": {
+                                "additionalProperties": {
+                                  "type": "boolean"
+                                },
+                                "type": "object"
+                              },
+                              "attributes": {
+                                "additionalProperties": {
+                                  "items": {
+                                    "type": "string"
+                                  },
+                                  "type": "array"
+                                },
+                                "type": "object"
+                              },
+                              "clientRoles": {
+                                "additionalProperties": {
+                                  "items": {
+                                    "type": "string"
+                                  },
+                                  "type": "array"
+                                },
+                                "type": "object"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "parentId": {
+                                "type": "string"
+                              },
+                              "path": {
+                                "type": "string"
+                              },
+                              "realmRoles": {
+                                "items": {
+                                  "type": "string"
+                                },
+                                "type": "array"
+                              },
+                              "subGroupCount": {
+                                "type": "integer"
+                              },
+                              "subGroups": {
+                                "items": {
+                                  "properties": {
+                                    "access": {
+                                      "additionalProperties": {
+                                        "type": "boolean"
+                                      },
+                                      "type": "object"
+                                    },
+                                    "attributes": {
+                                      "additionalProperties": {
+                                        "items": {
+                                          "type": "string"
+                                        },
+                                        "type": "array"
+                                      },
+                                      "type": "object"
+                                    },
+                                    "clientRoles": {
+                                      "additionalProperties": {
+                                        "items": {
+                                          "type": "string"
+                                        },
+                                        "type": "array"
+                                      },
+                                      "type": "object"
+                                    },
+                                    "description": {
+                                      "type": "string"
+                                    },
+                                    "id": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "parentId": {
+                                      "type": "string"
+                                    },
+                                    "path": {
+                                      "type": "string"
+                                    },
+                                    "realmRoles": {
+                                      "items": {
+                                        "type": "string"
+                                      },
+                                      "type": "array"
+                                    },
+                                    "subGroupCount": {
+                                      "type": "integer"
+                                    },
+                                    "subGroups": {
+                                      "items": {
+                                        "properties": {
+                                          "access": {
+                                            "additionalProperties": {
+                                              "type": "boolean"
+                                            },
+                                            "type": "object"
+                                          },
+                                          "attributes": {
+                                            "additionalProperties": {
+                                              "items": {
+                                                "type": "string"
+                                              },
+                                              "type": "array"
+                                            },
+                                            "type": "object"
+                                          },
+                                          "clientRoles": {
+                                            "additionalProperties": {
+                                              "items": {
+                                                "type": "string"
+                                              },
+                                              "type": "array"
+                                            },
+                                            "type": "object"
+                                          },
+                                          "description": {
+                                            "type": "string"
+                                          },
+                                          "id": {
+                                            "type": "string"
+                                          },
+                                          "name": {
+                                            "type": "string"
+                                          },
+                                          "parentId": {
+                                            "type": "string"
+                                          },
+                                          "path": {
+                                            "type": "string"
+                                          },
+                                          "realmRoles": {
+                                            "items": {
+                                              "type": "string"
+                                            },
+                                            "type": "array"
+                                          },
+                                          "subGroupCount": {
+                                            "type": "integer"
+                                          },
+                                          "subGroups": {
+                                            "items": {
+                                              "properties": {
+                                                "access": {
+                                                  "additionalProperties": {
+                                                    "type": "boolean"
+                                                  },
+                                                  "type": "object"
+                                                },
+                                                "attributes": {
+                                                  "additionalProperties": {
+                                                    "items": {
+                                                      "type": "string"
+                                                    },
+                                                    "type": "array"
+                                                  },
+                                                  "type": "object"
+                                                },
+                                                "clientRoles": {
+                                                  "additionalProperties": {
+                                                    "items": {
+                                                      "type": "string"
+                                                    },
+                                                    "type": "array"
+                                                  },
+                                                  "type": "object"
+                                                },
+                                                "description": {
+                                                  "type": "string"
+                                                },
+                                                "id": {
+                                                  "type": "string"
+                                                },
+                                                "name": {
+                                                  "type": "string"
+                                                },
+                                                "parentId": {
+                                                  "type": "string"
+                                                },
+                                                "path": {
+                                                  "type": "string"
+                                                },
+                                                "realmRoles": {
+                                                  "items": {
+                                                    "type": "string"
+                                                  },
+                                                  "type": "array"
+                                                },
+                                                "subGroupCount": {
+                                                  "type": "integer"
+                                                },
+                                                "subGroups": {
+                                                  "items": {
+                                                    "properties": {
+                                                      "access": {
+                                                        "additionalProperties": {
+                                                          "type": "boolean"
+                                                        },
+                                                        "type": "object"
+                                                      },
+                                                      "attributes": {
+                                                        "additionalProperties": {
+                                                          "items": {
+                                                            "type": "string"
+                                                          },
+                                                          "type": "array"
+                                                        },
+                                                        "type": "object"
+                                                      },
+                                                      "clientRoles": {
+                                                        "additionalProperties": {
+                                                          "items": {
+                                                            "type": "string"
+                                                          },
+                                                          "type": "array"
+                                                        },
+                                                        "type": "object"
+                                                      },
+                                                      "description": {
+                                                        "type": "string"
+                                                      },
+                                                      "id": {
+                                                        "type": "string"
+                                                      },
+                                                      "name": {
+                                                        "type": "string"
+                                                      },
+                                                      "parentId": {
+                                                        "type": "string"
+                                                      },
+                                                      "path": {
+                                                        "type": "string"
+                                                      },
+                                                      "realmRoles": {
+                                                        "items": {
+                                                          "type": "string"
+                                                        },
+                                                        "type": "array"
+                                                      },
+                                                      "subGroupCount": {
+                                                        "type": "integer"
+                                                      },
+                                                      "subGroups": {
+                                                        "items": {
+                                                          "properties": {
+                                                            "access": {
+                                                              "additionalProperties": {
+                                                                "type": "boolean"
+                                                              },
+                                                              "type": "object"
+                                                            },
+                                                            "attributes": {
+                                                              "additionalProperties": {
+                                                                "items": {
+                                                                  "type": "string"
+                                                                },
+                                                                "type": "array"
+                                                              },
+                                                              "type": "object"
+                                                            },
+                                                            "clientRoles": {
+                                                              "additionalProperties": {
+                                                                "items": {
+                                                                  "type": "string"
+                                                                },
+                                                                "type": "array"
+                                                              },
+                                                              "type": "object"
+                                                            },
+                                                            "description": {
+                                                              "type": "string"
+                                                            },
+                                                            "id": {
+                                                              "type": "string"
+                                                            },
+                                                            "name": {
+                                                              "type": "string"
+                                                            },
+                                                            "parentId": {
+                                                              "type": "string"
+                                                            },
+                                                            "path": {
+                                                              "type": "string"
+                                                            },
+                                                            "realmRoles": {
+                                                              "items": {
+                                                                "type": "string"
+                                                              },
+                                                              "type": "array"
+                                                            },
+                                                            "subGroupCount": {
+                                                              "type": "integer"
+                                                            },
+                                                            "subGroups": {
+                                                              "items": {
+                                                                "properties": {
+                                                                  "access": {
+                                                                    "additionalProperties": {
+                                                                      "type": "boolean"
+                                                                    },
+                                                                    "type": "object"
+                                                                  },
+                                                                  "attributes": {
+                                                                    "additionalProperties": {
+                                                                      "items": {
+                                                                        "type": "string"
+                                                                      },
+                                                                      "type": "array"
+                                                                    },
+                                                                    "type": "object"
+                                                                  },
+                                                                  "clientRoles": {
+                                                                    "additionalProperties": {
+                                                                      "items": {
+                                                                        "type": "string"
+                                                                      },
+                                                                      "type": "array"
+                                                                    },
+                                                                    "type": "object"
+                                                                  },
+                                                                  "description": {
+                                                                    "type": "string"
+                                                                  },
+                                                                  "id": {
+                                                                    "type": "string"
+                                                                  },
+                                                                  "name": {
+                                                                    "type": "string"
+                                                                  },
+                                                                  "parentId": {
+                                                                    "type": "string"
+                                                                  },
+                                                                  "path": {
+                                                                    "type": "string"
+                                                                  },
+                                                                  "realmRoles": {
+                                                                    "items": {
+                                                                      "type": "string"
+                                                                    },
+                                                                    "type": "array"
+                                                                  },
+                                                                  "subGroupCount": {
+                                                                    "type": "integer"
+                                                                  },
+                                                                  "subGroups": {
+                                                                    "items": {
+                                                                      "properties": {
+                                                                        "access": {
+                                                                          "additionalProperties": {
+                                                                            "type": "boolean"
+                                                                          },
+                                                                          "type": "object"
+                                                                        },
+                                                                        "attributes": {
+                                                                          "additionalProperties": {
+                                                                            "items": {
+                                                                              "type": "string"
+                                                                            },
+                                                                            "type": "array"
+                                                                          },
+                                                                          "type": "object"
+                                                                        },
+                                                                        "clientRoles": {
+                                                                          "additionalProperties": {
+                                                                            "items": {
+                                                                              "type": "string"
+                                                                            },
+                                                                            "type": "array"
+                                                                          },
+                                                                          "type": "object"
+                                                                        },
+                                                                        "description": {
+                                                                          "type": "string"
+                                                                        },
+                                                                        "id": {
+                                                                          "type": "string"
+                                                                        },
+                                                                        "name": {
+                                                                          "type": "string"
+                                                                        },
+                                                                        "parentId": {
+                                                                          "type": "string"
+                                                                        },
+                                                                        "path": {
+                                                                          "type": "string"
+                                                                        },
+                                                                        "realmRoles": {
+                                                                          "items": {
+                                                                            "type": "string"
+                                                                          },
+                                                                          "type": "array"
+                                                                        },
+                                                                        "subGroupCount": {
+                                                                          "type": "integer"
+                                                                        },
+                                                                        "subGroups": {
+                                                                          "items": {
+                                                                            "properties": {
+                                                                              "access": {
+                                                                                "additionalProperties": {
+                                                                                  "type": "boolean"
+                                                                                },
+                                                                                "type": "object"
+                                                                              },
+                                                                              "attributes": {
+                                                                                "additionalProperties": {
+                                                                                  "items": {
+                                                                                    "type": "string"
+                                                                                  },
+                                                                                  "type": "array"
+                                                                                },
+                                                                                "type": "object"
+                                                                              },
+                                                                              "clientRoles": {
+                                                                                "additionalProperties": {
+                                                                                  "items": {
+                                                                                    "type": "string"
+                                                                                  },
+                                                                                  "type": "array"
+                                                                                },
+                                                                                "type": "object"
+                                                                              },
+                                                                              "description": {
+                                                                                "type": "string"
+                                                                              },
+                                                                              "id": {
+                                                                                "type": "string"
+                                                                              },
+                                                                              "name": {
+                                                                                "type": "string"
+                                                                              },
+                                                                              "parentId": {
+                                                                                "type": "string"
+                                                                              },
+                                                                              "path": {
+                                                                                "type": "string"
+                                                                              },
+                                                                              "realmRoles": {
+                                                                                "items": {
+                                                                                  "type": "string"
+                                                                                },
+                                                                                "type": "array"
+                                                                              },
+                                                                              "subGroupCount": {
+                                                                                "type": "integer"
+                                                                              },
+                                                                              "subGroups": {
+                                                                                "items": {
+                                                                                  "properties": {
+                                                                                    "access": {
+                                                                                      "additionalProperties": {
+                                                                                        "type": "boolean"
+                                                                                      },
+                                                                                      "type": "object"
+                                                                                    },
+                                                                                    "attributes": {
+                                                                                      "additionalProperties": {
+                                                                                        "items": {
+                                                                                          "type": "string"
+                                                                                        },
+                                                                                        "type": "array"
+                                                                                      },
+                                                                                      "type": "object"
+                                                                                    },
+                                                                                    "clientRoles": {
+                                                                                      "additionalProperties": {
+                                                                                        "items": {
+                                                                                          "type": "string"
+                                                                                        },
+                                                                                        "type": "array"
+                                                                                      },
+                                                                                      "type": "object"
+                                                                                    },
+                                                                                    "description": {
+                                                                                      "type": "string"
+                                                                                    },
+                                                                                    "id": {
+                                                                                      "type": "string"
+                                                                                    },
+                                                                                    "name": {
+                                                                                      "type": "string"
+                                                                                    },
+                                                                                    "parentId": {
+                                                                                      "type": "string"
+                                                                                    },
+                                                                                    "path": {
+                                                                                      "type": "string"
+                                                                                    },
+                                                                                    "realmRoles": {
+                                                                                      "items": {
+                                                                                        "type": "string"
+                                                                                      },
+                                                                                      "type": "array"
+                                                                                    },
+                                                                                    "subGroupCount": {
+                                                                                      "type": "integer"
+                                                                                    }
+                                                                                  },
+                                                                                  "type": "object",
+                                                                                  "additionalProperties": false
+                                                                                },
+                                                                                "type": "array"
+                                                                              }
+                                                                            },
+                                                                            "type": "object",
+                                                                            "additionalProperties": false
+                                                                          },
+                                                                          "type": "array"
+                                                                        }
+                                                                      },
+                                                                      "type": "object",
+                                                                      "additionalProperties": false
+                                                                    },
+                                                                    "type": "array"
+                                                                  }
+                                                                },
+                                                                "type": "object",
+                                                                "additionalProperties": false
+                                                              },
+                                                              "type": "array"
+                                                            }
+                                                          },
+                                                          "type": "object",
+                                                          "additionalProperties": false
+                                                        },
+                                                        "type": "array"
+                                                      }
+                                                    },
+                                                    "type": "object",
+                                                    "additionalProperties": false
+                                                  },
+                                                  "type": "array"
+                                                }
+                                              },
+                                              "type": "object",
+                                              "additionalProperties": false
+                                            },
+                                            "type": "array"
+                                          }
+                                        },
+                                        "type": "object",
+                                        "additionalProperties": false
+                                      },
+                                      "type": "array"
+                                    }
+                                  },
+                                  "type": "object",
+                                  "additionalProperties": false
+                                },
+                                "type": "array"
+                              }
+                            },
+                            "type": "object",
+                            "additionalProperties": false
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object",
+                      "additionalProperties": false
+                    },
+                    "type": "array"
+                  },
                   "id": {
                     "type": "string"
                   },
@@ -4169,6 +4899,12 @@
                         },
                         "trustEmail": {
                           "type": "boolean"
+                        },
+                        "types": {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array"
                         },
                         "updateProfileFirstLoginMode": {
                           "type": "string"
@@ -4277,6 +5013,9 @@
                               },
                               "digits": {
                                 "type": "integer"
+                              },
+                              "federationLink": {
+                                "type": "string"
                               },
                               "hashIterations": {
                                 "type": "integer"
@@ -4430,6 +5169,9 @@
                                       "type": "object"
                                     },
                                     "type": "object"
+                                  },
+                                  "defaultValue": {
+                                    "type": "string"
                                   },
                                   "displayName": {
                                     "type": "string"
@@ -4879,6 +5621,9 @@
               "type": "object",
               "additionalProperties": false
             },
+            "scimApiEnabled": {
+              "type": "boolean"
+            },
             "scopeMappings": {
               "items": {
                 "properties": {
@@ -5110,6 +5855,9 @@
                         "digits": {
                           "type": "integer"
                         },
+                        "federationLink": {
+                          "type": "string"
+                        },
                         "hashIterations": {
                           "type": "integer"
                         },
@@ -5256,6 +6004,9 @@
                               },
                               "type": "object"
                             },
+                            "defaultValue": {
+                              "type": "string"
+                            },
                             "displayName": {
                               "type": "string"
                             },
@@ -5383,6 +6134,9 @@
               },
               "type": "array"
             },
+            "webAuthnPolicyPasswordlessPasskeysEnabled": {
+              "type": "boolean"
+            },
             "webAuthnPolicyPasswordlessRequireResidentKey": {
               "type": "string"
             },
@@ -5430,6 +6184,9 @@
               "items": {
                 "properties": {
                   "name": {
+                    "type": "string"
+                  },
+                  "request": {
                     "type": "string"
                   }
                 },

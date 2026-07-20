@@ -1,5 +1,5 @@
 {
-  "description": "Check is the Schema for the Checks API. Synthetic Monitoring checks are tests that run on selected probes at defined intervals and report metrics and logs back to your Grafana Cloud account. The target for checks can be a domain name, a server, or a website, depending on what information you would like to gather about your endpoint. You can define multiple checks for a single endpoint to check different capabilities. Official documentation https://grafana.com/docs/grafana-cloud/monitor-public-endpoints/create-checks/checks/",
+  "description": "Check is the Schema for the Checks API. Synthetic Monitoring checks are tests that run on selected probes at defined intervals and report metrics and logs back to your Grafana Cloud account. The target for checks can be a domain name, a server, or a website, depending on what information you would like to gather about your endpoint. You can define multiple checks for a single endpoint to check different capabilities. Official documentation https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/create-checks/checks/",
   "properties": {
     "apiVersion": {
       "description": "APIVersion defines the versioned schema of this representation of an object.\nServers should convert recognized schemas to the latest internal value, and\nmay reject unrecognized values.\nMore info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
@@ -27,7 +27,7 @@
         "forProvider": {
           "properties": {
             "alertSensitivity": {
-              "description": "(String) Can be set to none, low, medium, or high to correspond to the check alert levels. Defaults to none.\nCan be set to `none`, `low`, `medium`, or `high` to correspond to the check [alert levels](https://grafana.com/docs/grafana-cloud/monitor-public-endpoints/configure-alerts/synthetic-monitoring-alerting/). Defaults to `none`.",
+              "description": "(String) Can be set to none, low, medium, or high to correspond to the check alert levels. Defaults to none.\nCan be set to `none`, `low`, `medium`, or `high` to correspond to the check [alert levels](https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/configure-alerts/synthetic-monitoring-alerting/). Defaults to `none`.",
               "type": "string"
             },
             "basicMetricsOnly": {
@@ -39,7 +39,7 @@
               "type": "boolean"
             },
             "frequency": {
-              "description": "(Number) How often the check runs in milliseconds (the value is not truly a \"frequency\" but a \"period\"). The minimum acceptable value is 1 second (1000 ms), and the maximum is 120 seconds (120000 ms). Defaults to 60000.\nHow often the check runs in milliseconds (the value is not truly a \"frequency\" but a \"period\"). The minimum acceptable value is 1 second (1000 ms), and the maximum is 120 seconds (120000 ms). Defaults to `60000`.",
+              "description": "(Number) How often the check runs in milliseconds (the value is not truly a \"frequency\" but a \"period\"). The minimum acceptable value is 1 second (1000 ms), and the maximum is 1 hour (3600000 ms). Defaults to 60000.\nHow often the check runs in milliseconds (the value is not truly a \"frequency\" but a \"period\"). The minimum acceptable value is 1 second (1000 ms), and the maximum is 1 hour (3600000 ms). Defaults to `60000`.",
               "type": "number"
             },
             "job": {
@@ -54,6 +54,13 @@
               "type": "object",
               "x-kubernetes-map-type": "granular"
             },
+            "probeNames": {
+              "description": "CUSTOM FIELD: List of probe names to resolve to probe IDs.\nIf set, this will override the Probes field with the resolved probe IDs on every reconciliation.\nThis field is excluded from Terraform via tf:\"-\" tag.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
             "probes": {
               "description": "(Set of Number) List of probe location IDs where this target will be checked from.\nList of probe location IDs where this target will be checked from.",
               "items": {
@@ -66,6 +73,20 @@
               "description": "(Block Set, Min: 1, Max: 1) Check settings. Should contain exactly one nested block. (see below for nested schema)\nCheck settings. Should contain exactly one nested block.",
               "items": {
                 "properties": {
+                  "browser": {
+                    "description": "cloud/testing/synthetic-monitoring/create-checks/checks/k6-browser/. (see below for nested schema)\nSettings for browser check. See https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/create-checks/checks/k6-browser/.",
+                    "items": {
+                      "properties": {
+                        "script": {
+                          "description": "(String)",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "additionalProperties": false
+                    },
+                    "type": "array"
+                  },
                   "dns": {
                     "description": "(Block Set, Max: 1) Settings for DNS check. The target must be a valid hostname (or IP address for PTR records). (see below for nested schema)\nSettings for DNS check. The target must be a valid hostname (or IP address for `PTR` records).",
                     "items": {
@@ -186,6 +207,78 @@
                     },
                     "type": "array"
                   },
+                  "grpc": {
+                    "description": "(Block Set, Max: 1) Settings for gRPC Health check. The target must be of the form <host>:<port>, where the host portion must be a valid hostname or IP address. (see below for nested schema)\nSettings for gRPC Health check. The target must be of the form `<host>:<port>`, where the host portion must be a valid hostname or IP address.",
+                    "items": {
+                      "properties": {
+                        "ipVersion": {
+                          "description": "(String) Options are V4, V6, Any. Specifies whether the corresponding check will be performed using IPv4 or IPv6. The Any value indicates that IPv6 should be used, falling back to IPv4 if that's not available. Defaults to V4.\nOptions are `V4`, `V6`, `Any`. Specifies whether the corresponding check will be performed using IPv4 or IPv6. The `Any` value indicates that IPv6 should be used, falling back to IPv4 if that's not available. Defaults to `V4`.",
+                          "type": "string"
+                        },
+                        "service": {
+                          "description": "(String) gRPC service.\ngRPC service.",
+                          "type": "string"
+                        },
+                        "tls": {
+                          "description": "(Boolean) Whether or not TLS is used when the connection is initiated. Defaults to false.\nWhether or not TLS is used when the connection is initiated. Defaults to `false`.",
+                          "type": "boolean"
+                        },
+                        "tlsConfig": {
+                          "description": "(Block Set, Max: 1) TLS config. (see below for nested schema)\nTLS config.",
+                          "items": {
+                            "properties": {
+                              "caCert": {
+                                "description": "(String) CA certificate in PEM format.\nCA certificate in PEM format.",
+                                "type": "string"
+                              },
+                              "clientCert": {
+                                "description": "(String) Client certificate in PEM format.\nClient certificate in PEM format.",
+                                "type": "string"
+                              },
+                              "clientKeySecretRef": {
+                                "description": "(String, Sensitive) Client key in PEM format.\nClient key in PEM format.",
+                                "properties": {
+                                  "key": {
+                                    "description": "The key to select.",
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "description": "Name of the secret.",
+                                    "type": "string"
+                                  },
+                                  "namespace": {
+                                    "description": "Namespace of the secret.",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "key",
+                                  "name",
+                                  "namespace"
+                                ],
+                                "type": "object",
+                                "additionalProperties": false
+                              },
+                              "insecureSkipVerify": {
+                                "description": "(Boolean) Disable target certificate validation. Defaults to false.\nDisable target certificate validation. Defaults to `false`.",
+                                "type": "boolean"
+                              },
+                              "serverName": {
+                                "description": "(String) Used to verify the hostname for the targets.\nUsed to verify the hostname for the targets.",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object",
+                            "additionalProperties": false
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object",
+                      "additionalProperties": false
+                    },
+                    "type": "array"
+                  },
                   "http": {
                     "description": "(Block Set, Max: 1) Settings for HTTP check. The target must be a URL (http or https). (see below for nested schema)\nSettings for HTTP check. The target must be a URL (http or https).",
                     "items": {
@@ -194,9 +287,29 @@
                           "description": "(Block Set, Max: 1) Basic auth settings. (see below for nested schema)\nBasic auth settings.",
                           "items": {
                             "properties": {
-                              "password": {
-                                "description": "(String) Basic auth password.\nBasic auth password.",
-                                "type": "string"
+                              "passwordSecretRef": {
+                                "description": "(String, Sensitive) Basic auth password.\nBasic auth password.",
+                                "properties": {
+                                  "key": {
+                                    "description": "The key to select.",
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "description": "Name of the secret.",
+                                    "type": "string"
+                                  },
+                                  "namespace": {
+                                    "description": "Namespace of the secret.",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "key",
+                                  "name",
+                                  "namespace"
+                                ],
+                                "type": "object",
+                                "additionalProperties": false
                               },
                               "username": {
                                 "description": "(String) Basic auth username.\nBasic auth username.",
@@ -208,9 +321,29 @@
                           },
                           "type": "array"
                         },
-                        "bearerToken": {
-                          "description": "(String) Token for use with bearer authorization header.\nToken for use with bearer authorization header.",
-                          "type": "string"
+                        "bearerTokenSecretRef": {
+                          "description": "(String, Sensitive) Token for use with bearer authorization header.\nToken for use with bearer authorization header.",
+                          "properties": {
+                            "key": {
+                              "description": "The key to select.",
+                              "type": "string"
+                            },
+                            "name": {
+                              "description": "Name of the secret.",
+                              "type": "string"
+                            },
+                            "namespace": {
+                              "description": "Namespace of the secret.",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "key",
+                            "name",
+                            "namespace"
+                          ],
+                          "type": "object",
+                          "additionalProperties": false
                         },
                         "body": {
                           "description": "(String) The body of the HTTP request used in probe.\nThe body of the HTTP request used in probe.",
@@ -218,6 +351,10 @@
                         },
                         "cacheBustingQueryParamName": {
                           "description": "(String) The name of the query parameter used to prevent the server from using a cached response. Each probe will assign a random value to this parameter each time a request is made.\nThe name of the query parameter used to prevent the server from using a cached response. Each probe will assign a random value to this parameter each time a request is made.",
+                          "type": "string"
+                        },
+                        "compression": {
+                          "description": "(String) Check fails if the response body is not compressed using this compression algorithm. One of none, identity, br, gzip, deflate.\nCheck fails if the response body is not compressed using this compression algorithm. One of `none`, `identity`, `br`, `gzip`, `deflate`.",
                           "type": "string"
                         },
                         "failIfBodyMatchesRegexp": {
@@ -570,6 +707,20 @@
                     },
                     "type": "array"
                   },
+                  "scripted": {
+                    "description": "cloud/testing/synthetic-monitoring/create-checks/checks/k6/. (see below for nested schema)\nSettings for scripted check. See https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/create-checks/checks/k6/.",
+                    "items": {
+                      "properties": {
+                        "script": {
+                          "description": "(String)",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "additionalProperties": false
+                    },
+                    "type": "array"
+                  },
                   "tcp": {
                     "description": "(Block Set, Max: 1) Settings for TCP check. The target must be of the form <host>:<port>, where the host portion must be a valid hostname or IP address. (see below for nested schema)\nSettings for TCP check. The target must be of the form `<host>:<port>`, where the host portion must be a valid hostname or IP address.",
                     "items": {
@@ -697,7 +848,7 @@
               "type": "string"
             },
             "timeout": {
-              "description": "(Number) Specifies the maximum running time for the check in milliseconds. The minimum acceptable value is 1 second (1000 ms), and the maximum 10 seconds (10000 ms). Defaults to 3000.\nSpecifies the maximum running time for the check in milliseconds. The minimum acceptable value is 1 second (1000 ms), and the maximum 10 seconds (10000 ms). Defaults to `3000`.",
+              "description": "(Number) Specifies the maximum running time for the check in milliseconds. The minimum acceptable value is 1 second (1000 ms), and the maximum 180 seconds (180000 ms). Defaults to 3000.\nSpecifies the maximum running time for the check in milliseconds. The minimum acceptable value is 1 second (1000 ms), and the maximum 180 seconds (180000 ms). Defaults to `3000`.",
               "type": "number"
             }
           },
@@ -708,7 +859,7 @@
           "description": "THIS IS A BETA FIELD. It will be honored\nunless the Management Policies feature flag is disabled.\nInitProvider holds the same fields as ForProvider, with the exception\nof Identifier and other resource reference fields. The fields that are\nin InitProvider are merged into ForProvider when the resource is created.\nThe same fields are also added to the terraform ignore_changes hook, to\navoid updating them after creation. This is useful for fields that are\nrequired on creation, but we do not desire to update them after creation,\nfor example because of an external controller is managing them, like an\nautoscaler.",
           "properties": {
             "alertSensitivity": {
-              "description": "(String) Can be set to none, low, medium, or high to correspond to the check alert levels. Defaults to none.\nCan be set to `none`, `low`, `medium`, or `high` to correspond to the check [alert levels](https://grafana.com/docs/grafana-cloud/monitor-public-endpoints/configure-alerts/synthetic-monitoring-alerting/). Defaults to `none`.",
+              "description": "(String) Can be set to none, low, medium, or high to correspond to the check alert levels. Defaults to none.\nCan be set to `none`, `low`, `medium`, or `high` to correspond to the check [alert levels](https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/configure-alerts/synthetic-monitoring-alerting/). Defaults to `none`.",
               "type": "string"
             },
             "basicMetricsOnly": {
@@ -720,7 +871,7 @@
               "type": "boolean"
             },
             "frequency": {
-              "description": "(Number) How often the check runs in milliseconds (the value is not truly a \"frequency\" but a \"period\"). The minimum acceptable value is 1 second (1000 ms), and the maximum is 120 seconds (120000 ms). Defaults to 60000.\nHow often the check runs in milliseconds (the value is not truly a \"frequency\" but a \"period\"). The minimum acceptable value is 1 second (1000 ms), and the maximum is 120 seconds (120000 ms). Defaults to `60000`.",
+              "description": "(Number) How often the check runs in milliseconds (the value is not truly a \"frequency\" but a \"period\"). The minimum acceptable value is 1 second (1000 ms), and the maximum is 1 hour (3600000 ms). Defaults to 60000.\nHow often the check runs in milliseconds (the value is not truly a \"frequency\" but a \"period\"). The minimum acceptable value is 1 second (1000 ms), and the maximum is 1 hour (3600000 ms). Defaults to `60000`.",
               "type": "number"
             },
             "job": {
@@ -735,6 +886,13 @@
               "type": "object",
               "x-kubernetes-map-type": "granular"
             },
+            "probeNames": {
+              "description": "CUSTOM FIELD: List of probe names to resolve to probe IDs.\nIf set, this will override the Probes field with the resolved probe IDs on every reconciliation.\nThis field is excluded from Terraform via tf:\"-\" tag.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
             "probes": {
               "description": "(Set of Number) List of probe location IDs where this target will be checked from.\nList of probe location IDs where this target will be checked from.",
               "items": {
@@ -747,6 +905,20 @@
               "description": "(Block Set, Min: 1, Max: 1) Check settings. Should contain exactly one nested block. (see below for nested schema)\nCheck settings. Should contain exactly one nested block.",
               "items": {
                 "properties": {
+                  "browser": {
+                    "description": "cloud/testing/synthetic-monitoring/create-checks/checks/k6-browser/. (see below for nested schema)\nSettings for browser check. See https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/create-checks/checks/k6-browser/.",
+                    "items": {
+                      "properties": {
+                        "script": {
+                          "description": "(String)",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "additionalProperties": false
+                    },
+                    "type": "array"
+                  },
                   "dns": {
                     "description": "(Block Set, Max: 1) Settings for DNS check. The target must be a valid hostname (or IP address for PTR records). (see below for nested schema)\nSettings for DNS check. The target must be a valid hostname (or IP address for `PTR` records).",
                     "items": {
@@ -867,6 +1039,78 @@
                     },
                     "type": "array"
                   },
+                  "grpc": {
+                    "description": "(Block Set, Max: 1) Settings for gRPC Health check. The target must be of the form <host>:<port>, where the host portion must be a valid hostname or IP address. (see below for nested schema)\nSettings for gRPC Health check. The target must be of the form `<host>:<port>`, where the host portion must be a valid hostname or IP address.",
+                    "items": {
+                      "properties": {
+                        "ipVersion": {
+                          "description": "(String) Options are V4, V6, Any. Specifies whether the corresponding check will be performed using IPv4 or IPv6. The Any value indicates that IPv6 should be used, falling back to IPv4 if that's not available. Defaults to V4.\nOptions are `V4`, `V6`, `Any`. Specifies whether the corresponding check will be performed using IPv4 or IPv6. The `Any` value indicates that IPv6 should be used, falling back to IPv4 if that's not available. Defaults to `V4`.",
+                          "type": "string"
+                        },
+                        "service": {
+                          "description": "(String) gRPC service.\ngRPC service.",
+                          "type": "string"
+                        },
+                        "tls": {
+                          "description": "(Boolean) Whether or not TLS is used when the connection is initiated. Defaults to false.\nWhether or not TLS is used when the connection is initiated. Defaults to `false`.",
+                          "type": "boolean"
+                        },
+                        "tlsConfig": {
+                          "description": "(Block Set, Max: 1) TLS config. (see below for nested schema)\nTLS config.",
+                          "items": {
+                            "properties": {
+                              "caCert": {
+                                "description": "(String) CA certificate in PEM format.\nCA certificate in PEM format.",
+                                "type": "string"
+                              },
+                              "clientCert": {
+                                "description": "(String) Client certificate in PEM format.\nClient certificate in PEM format.",
+                                "type": "string"
+                              },
+                              "clientKeySecretRef": {
+                                "description": "(String, Sensitive) Client key in PEM format.\nClient key in PEM format.",
+                                "properties": {
+                                  "key": {
+                                    "description": "The key to select.",
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "description": "Name of the secret.",
+                                    "type": "string"
+                                  },
+                                  "namespace": {
+                                    "description": "Namespace of the secret.",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "key",
+                                  "name",
+                                  "namespace"
+                                ],
+                                "type": "object",
+                                "additionalProperties": false
+                              },
+                              "insecureSkipVerify": {
+                                "description": "(Boolean) Disable target certificate validation. Defaults to false.\nDisable target certificate validation. Defaults to `false`.",
+                                "type": "boolean"
+                              },
+                              "serverName": {
+                                "description": "(String) Used to verify the hostname for the targets.\nUsed to verify the hostname for the targets.",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object",
+                            "additionalProperties": false
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object",
+                      "additionalProperties": false
+                    },
+                    "type": "array"
+                  },
                   "http": {
                     "description": "(Block Set, Max: 1) Settings for HTTP check. The target must be a URL (http or https). (see below for nested schema)\nSettings for HTTP check. The target must be a URL (http or https).",
                     "items": {
@@ -875,23 +1119,66 @@
                           "description": "(Block Set, Max: 1) Basic auth settings. (see below for nested schema)\nBasic auth settings.",
                           "items": {
                             "properties": {
-                              "password": {
-                                "description": "(String) Basic auth password.\nBasic auth password.",
-                                "type": "string"
+                              "passwordSecretRef": {
+                                "description": "(String, Sensitive) Basic auth password.\nBasic auth password.",
+                                "properties": {
+                                  "key": {
+                                    "description": "The key to select.",
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "description": "Name of the secret.",
+                                    "type": "string"
+                                  },
+                                  "namespace": {
+                                    "description": "Namespace of the secret.",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "key",
+                                  "name",
+                                  "namespace"
+                                ],
+                                "type": "object",
+                                "additionalProperties": false
                               },
                               "username": {
                                 "description": "(String) Basic auth username.\nBasic auth username.",
                                 "type": "string"
                               }
                             },
+                            "required": [
+                              "passwordSecretRef"
+                            ],
                             "type": "object",
                             "additionalProperties": false
                           },
                           "type": "array"
                         },
-                        "bearerToken": {
-                          "description": "(String) Token for use with bearer authorization header.\nToken for use with bearer authorization header.",
-                          "type": "string"
+                        "bearerTokenSecretRef": {
+                          "description": "(String, Sensitive) Token for use with bearer authorization header.\nToken for use with bearer authorization header.",
+                          "properties": {
+                            "key": {
+                              "description": "The key to select.",
+                              "type": "string"
+                            },
+                            "name": {
+                              "description": "Name of the secret.",
+                              "type": "string"
+                            },
+                            "namespace": {
+                              "description": "Namespace of the secret.",
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "key",
+                            "name",
+                            "namespace"
+                          ],
+                          "type": "object",
+                          "additionalProperties": false
                         },
                         "body": {
                           "description": "(String) The body of the HTTP request used in probe.\nThe body of the HTTP request used in probe.",
@@ -899,6 +1186,10 @@
                         },
                         "cacheBustingQueryParamName": {
                           "description": "(String) The name of the query parameter used to prevent the server from using a cached response. Each probe will assign a random value to this parameter each time a request is made.\nThe name of the query parameter used to prevent the server from using a cached response. Each probe will assign a random value to this parameter each time a request is made.",
+                          "type": "string"
+                        },
+                        "compression": {
+                          "description": "(String) Check fails if the response body is not compressed using this compression algorithm. One of none, identity, br, gzip, deflate.\nCheck fails if the response body is not compressed using this compression algorithm. One of `none`, `identity`, `br`, `gzip`, `deflate`.",
                           "type": "string"
                         },
                         "failIfBodyMatchesRegexp": {
@@ -1012,6 +1303,30 @@
                               "clientCert": {
                                 "description": "(String) Client certificate in PEM format.\nClient certificate in PEM format.",
                                 "type": "string"
+                              },
+                              "clientKeySecretRef": {
+                                "description": "(String, Sensitive) Client key in PEM format.\nClient key in PEM format.",
+                                "properties": {
+                                  "key": {
+                                    "description": "The key to select.",
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "description": "Name of the secret.",
+                                    "type": "string"
+                                  },
+                                  "namespace": {
+                                    "description": "Namespace of the secret.",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "key",
+                                  "name",
+                                  "namespace"
+                                ],
+                                "type": "object",
+                                "additionalProperties": false
                               },
                               "insecureSkipVerify": {
                                 "description": "(Boolean) Disable target certificate validation. Defaults to false.\nDisable target certificate validation. Defaults to `false`.",
@@ -1227,6 +1542,20 @@
                     },
                     "type": "array"
                   },
+                  "scripted": {
+                    "description": "cloud/testing/synthetic-monitoring/create-checks/checks/k6/. (see below for nested schema)\nSettings for scripted check. See https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/create-checks/checks/k6/.",
+                    "items": {
+                      "properties": {
+                        "script": {
+                          "description": "(String)",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "additionalProperties": false
+                    },
+                    "type": "array"
+                  },
                   "tcp": {
                     "description": "(Block Set, Max: 1) Settings for TCP check. The target must be of the form <host>:<port>, where the host portion must be a valid hostname or IP address. (see below for nested schema)\nSettings for TCP check. The target must be of the form `<host>:<port>`, where the host portion must be a valid hostname or IP address.",
                     "items": {
@@ -1276,6 +1605,30 @@
                               "clientCert": {
                                 "description": "(String) Client certificate in PEM format.\nClient certificate in PEM format.",
                                 "type": "string"
+                              },
+                              "clientKeySecretRef": {
+                                "description": "(String, Sensitive) Client key in PEM format.\nClient key in PEM format.",
+                                "properties": {
+                                  "key": {
+                                    "description": "The key to select.",
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "description": "Name of the secret.",
+                                    "type": "string"
+                                  },
+                                  "namespace": {
+                                    "description": "Namespace of the secret.",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "key",
+                                  "name",
+                                  "namespace"
+                                ],
+                                "type": "object",
+                                "additionalProperties": false
                               },
                               "insecureSkipVerify": {
                                 "description": "(Boolean) Disable target certificate validation. Defaults to false.\nDisable target certificate validation. Defaults to `false`.",
@@ -1330,7 +1683,7 @@
               "type": "string"
             },
             "timeout": {
-              "description": "(Number) Specifies the maximum running time for the check in milliseconds. The minimum acceptable value is 1 second (1000 ms), and the maximum 10 seconds (10000 ms). Defaults to 3000.\nSpecifies the maximum running time for the check in milliseconds. The minimum acceptable value is 1 second (1000 ms), and the maximum 10 seconds (10000 ms). Defaults to `3000`.",
+              "description": "(Number) Specifies the maximum running time for the check in milliseconds. The minimum acceptable value is 1 second (1000 ms), and the maximum 180 seconds (180000 ms). Defaults to 3000.\nSpecifies the maximum running time for the check in milliseconds. The minimum acceptable value is 1 second (1000 ms), and the maximum 180 seconds (180000 ms). Defaults to `3000`.",
               "type": "number"
             }
           },
@@ -1397,88 +1750,8 @@
           "type": "object",
           "additionalProperties": false
         },
-        "publishConnectionDetailsTo": {
-          "description": "PublishConnectionDetailsTo specifies the connection secret config which\ncontains a name, metadata and a reference to secret store config to\nwhich any connection details for this managed resource should be written.\nConnection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
-          "properties": {
-            "configRef": {
-              "default": {
-                "name": "default"
-              },
-              "description": "SecretStoreConfigRef specifies which secret store config should be used\nfor this ConnectionSecret.",
-              "properties": {
-                "name": {
-                  "description": "Name of the referenced object.",
-                  "type": "string"
-                },
-                "policy": {
-                  "description": "Policies for referencing.",
-                  "properties": {
-                    "resolution": {
-                      "default": "Required",
-                      "description": "Resolution specifies whether resolution of this reference is required.\nThe default is 'Required', which means the reconcile will fail if the\nreference cannot be resolved. 'Optional' means this reference will be\na no-op if it cannot be resolved.",
-                      "enum": [
-                        "Required",
-                        "Optional"
-                      ],
-                      "type": "string"
-                    },
-                    "resolve": {
-                      "description": "Resolve specifies when this reference should be resolved. The default\nis 'IfNotPresent', which will attempt to resolve the reference only when\nthe corresponding field is not present. Use 'Always' to resolve the\nreference on every reconcile.",
-                      "enum": [
-                        "Always",
-                        "IfNotPresent"
-                      ],
-                      "type": "string"
-                    }
-                  },
-                  "type": "object",
-                  "additionalProperties": false
-                }
-              },
-              "required": [
-                "name"
-              ],
-              "type": "object",
-              "additionalProperties": false
-            },
-            "metadata": {
-              "description": "Metadata is the metadata for connection secret.",
-              "properties": {
-                "annotations": {
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "description": "Annotations are the annotations to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.annotations\".\n- It is up to Secret Store implementation for others store types.",
-                  "type": "object"
-                },
-                "labels": {
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "description": "Labels are the labels/tags to be added to connection secret.\n- For Kubernetes secrets, this will be used as \"metadata.labels\".\n- It is up to Secret Store implementation for others store types.",
-                  "type": "object"
-                },
-                "type": {
-                  "description": "Type is the SecretType for the connection secret.\n- Only valid for Kubernetes Secret Stores.",
-                  "type": "string"
-                }
-              },
-              "type": "object",
-              "additionalProperties": false
-            },
-            "name": {
-              "description": "Name is the name of the connection secret.",
-              "type": "string"
-            }
-          },
-          "required": [
-            "name"
-          ],
-          "type": "object",
-          "additionalProperties": false
-        },
         "writeConnectionSecretToRef": {
-          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.\nThis field is planned to be replaced in a future release in favor of\nPublishConnectionDetailsTo. Currently, both could be set independently\nand connection details would be published to both without affecting\neach other.",
+          "description": "WriteConnectionSecretToReference specifies the namespace and name of a\nSecret to which any connection details for this managed resource should\nbe written. Connection details frequently include the endpoint, username,\nand password required to connect to the managed resource.",
           "properties": {
             "name": {
               "description": "Name of the secret.",
@@ -1527,7 +1800,7 @@
         "atProvider": {
           "properties": {
             "alertSensitivity": {
-              "description": "(String) Can be set to none, low, medium, or high to correspond to the check alert levels. Defaults to none.\nCan be set to `none`, `low`, `medium`, or `high` to correspond to the check [alert levels](https://grafana.com/docs/grafana-cloud/monitor-public-endpoints/configure-alerts/synthetic-monitoring-alerting/). Defaults to `none`.",
+              "description": "(String) Can be set to none, low, medium, or high to correspond to the check alert levels. Defaults to none.\nCan be set to `none`, `low`, `medium`, or `high` to correspond to the check [alert levels](https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/configure-alerts/synthetic-monitoring-alerting/). Defaults to `none`.",
               "type": "string"
             },
             "basicMetricsOnly": {
@@ -1539,7 +1812,7 @@
               "type": "boolean"
             },
             "frequency": {
-              "description": "(Number) How often the check runs in milliseconds (the value is not truly a \"frequency\" but a \"period\"). The minimum acceptable value is 1 second (1000 ms), and the maximum is 120 seconds (120000 ms). Defaults to 60000.\nHow often the check runs in milliseconds (the value is not truly a \"frequency\" but a \"period\"). The minimum acceptable value is 1 second (1000 ms), and the maximum is 120 seconds (120000 ms). Defaults to `60000`.",
+              "description": "(Number) How often the check runs in milliseconds (the value is not truly a \"frequency\" but a \"period\"). The minimum acceptable value is 1 second (1000 ms), and the maximum is 1 hour (3600000 ms). Defaults to 60000.\nHow often the check runs in milliseconds (the value is not truly a \"frequency\" but a \"period\"). The minimum acceptable value is 1 second (1000 ms), and the maximum is 1 hour (3600000 ms). Defaults to `60000`.",
               "type": "number"
             },
             "id": {
@@ -1558,6 +1831,13 @@
               "type": "object",
               "x-kubernetes-map-type": "granular"
             },
+            "probeNames": {
+              "description": "CUSTOM FIELD: List of probe names to resolve to probe IDs.\nIf set, this will override the Probes field with the resolved probe IDs on every reconciliation.\nThis field is excluded from Terraform via tf:\"-\" tag.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
             "probes": {
               "description": "(Set of Number) List of probe location IDs where this target will be checked from.\nList of probe location IDs where this target will be checked from.",
               "items": {
@@ -1570,6 +1850,20 @@
               "description": "(Block Set, Min: 1, Max: 1) Check settings. Should contain exactly one nested block. (see below for nested schema)\nCheck settings. Should contain exactly one nested block.",
               "items": {
                 "properties": {
+                  "browser": {
+                    "description": "cloud/testing/synthetic-monitoring/create-checks/checks/k6-browser/. (see below for nested schema)\nSettings for browser check. See https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/create-checks/checks/k6-browser/.",
+                    "items": {
+                      "properties": {
+                        "script": {
+                          "description": "(String)",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "additionalProperties": false
+                    },
+                    "type": "array"
+                  },
                   "dns": {
                     "description": "(Block Set, Max: 1) Settings for DNS check. The target must be a valid hostname (or IP address for PTR records). (see below for nested schema)\nSettings for DNS check. The target must be a valid hostname (or IP address for `PTR` records).",
                     "items": {
@@ -1690,6 +1984,54 @@
                     },
                     "type": "array"
                   },
+                  "grpc": {
+                    "description": "(Block Set, Max: 1) Settings for gRPC Health check. The target must be of the form <host>:<port>, where the host portion must be a valid hostname or IP address. (see below for nested schema)\nSettings for gRPC Health check. The target must be of the form `<host>:<port>`, where the host portion must be a valid hostname or IP address.",
+                    "items": {
+                      "properties": {
+                        "ipVersion": {
+                          "description": "(String) Options are V4, V6, Any. Specifies whether the corresponding check will be performed using IPv4 or IPv6. The Any value indicates that IPv6 should be used, falling back to IPv4 if that's not available. Defaults to V4.\nOptions are `V4`, `V6`, `Any`. Specifies whether the corresponding check will be performed using IPv4 or IPv6. The `Any` value indicates that IPv6 should be used, falling back to IPv4 if that's not available. Defaults to `V4`.",
+                          "type": "string"
+                        },
+                        "service": {
+                          "description": "(String) gRPC service.\ngRPC service.",
+                          "type": "string"
+                        },
+                        "tls": {
+                          "description": "(Boolean) Whether or not TLS is used when the connection is initiated. Defaults to false.\nWhether or not TLS is used when the connection is initiated. Defaults to `false`.",
+                          "type": "boolean"
+                        },
+                        "tlsConfig": {
+                          "description": "(Block Set, Max: 1) TLS config. (see below for nested schema)\nTLS config.",
+                          "items": {
+                            "properties": {
+                              "caCert": {
+                                "description": "(String) CA certificate in PEM format.\nCA certificate in PEM format.",
+                                "type": "string"
+                              },
+                              "clientCert": {
+                                "description": "(String) Client certificate in PEM format.\nClient certificate in PEM format.",
+                                "type": "string"
+                              },
+                              "insecureSkipVerify": {
+                                "description": "(Boolean) Disable target certificate validation. Defaults to false.\nDisable target certificate validation. Defaults to `false`.",
+                                "type": "boolean"
+                              },
+                              "serverName": {
+                                "description": "(String) Used to verify the hostname for the targets.\nUsed to verify the hostname for the targets.",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object",
+                            "additionalProperties": false
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object",
+                      "additionalProperties": false
+                    },
+                    "type": "array"
+                  },
                   "http": {
                     "description": "(Block Set, Max: 1) Settings for HTTP check. The target must be a URL (http or https). (see below for nested schema)\nSettings for HTTP check. The target must be a URL (http or https).",
                     "items": {
@@ -1698,10 +2040,6 @@
                           "description": "(Block Set, Max: 1) Basic auth settings. (see below for nested schema)\nBasic auth settings.",
                           "items": {
                             "properties": {
-                              "password": {
-                                "description": "(String) Basic auth password.\nBasic auth password.",
-                                "type": "string"
-                              },
                               "username": {
                                 "description": "(String) Basic auth username.\nBasic auth username.",
                                 "type": "string"
@@ -1712,16 +2050,16 @@
                           },
                           "type": "array"
                         },
-                        "bearerToken": {
-                          "description": "(String) Token for use with bearer authorization header.\nToken for use with bearer authorization header.",
-                          "type": "string"
-                        },
                         "body": {
                           "description": "(String) The body of the HTTP request used in probe.\nThe body of the HTTP request used in probe.",
                           "type": "string"
                         },
                         "cacheBustingQueryParamName": {
                           "description": "(String) The name of the query parameter used to prevent the server from using a cached response. Each probe will assign a random value to this parameter each time a request is made.\nThe name of the query parameter used to prevent the server from using a cached response. Each probe will assign a random value to this parameter each time a request is made.",
+                          "type": "string"
+                        },
+                        "compression": {
+                          "description": "(String) Check fails if the response body is not compressed using this compression algorithm. One of none, identity, br, gzip, deflate.\nCheck fails if the response body is not compressed using this compression algorithm. One of `none`, `identity`, `br`, `gzip`, `deflate`.",
                           "type": "string"
                         },
                         "failIfBodyMatchesRegexp": {
@@ -2042,6 +2380,20 @@
                         },
                         "sourceIpAddress": {
                           "description": "(String) Source IP address.\nSource IP address.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "additionalProperties": false
+                    },
+                    "type": "array"
+                  },
+                  "scripted": {
+                    "description": "cloud/testing/synthetic-monitoring/create-checks/checks/k6/. (see below for nested schema)\nSettings for scripted check. See https://grafana.com/docs/grafana-cloud/testing/synthetic-monitoring/create-checks/checks/k6/.",
+                    "items": {
+                      "properties": {
+                        "script": {
+                          "description": "(String)",
                           "type": "string"
                         }
                       },
@@ -2157,7 +2509,7 @@
               "type": "number"
             },
             "timeout": {
-              "description": "(Number) Specifies the maximum running time for the check in milliseconds. The minimum acceptable value is 1 second (1000 ms), and the maximum 10 seconds (10000 ms). Defaults to 3000.\nSpecifies the maximum running time for the check in milliseconds. The minimum acceptable value is 1 second (1000 ms), and the maximum 10 seconds (10000 ms). Defaults to `3000`.",
+              "description": "(Number) Specifies the maximum running time for the check in milliseconds. The minimum acceptable value is 1 second (1000 ms), and the maximum 180 seconds (180000 ms). Defaults to 3000.\nSpecifies the maximum running time for the check in milliseconds. The minimum acceptable value is 1 second (1000 ms), and the maximum 180 seconds (180000 ms). Defaults to `3000`.",
               "type": "number"
             }
           },

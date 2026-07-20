@@ -164,6 +164,60 @@
           ],
           "x-kubernetes-list-type": "map"
         },
+        "taints": {
+          "description": "taints are the node taints that Cluster API will manage.\nThis list is not necessarily complete: other Kubernetes components may add or remove other taints from nodes,\ne.g. the node controller might add the node.kubernetes.io/not-ready taint.\nOnly those taints defined in this list will be added or removed by core Cluster API controllers.\n\nThere can be at most 64 taints.\nA pod would have to tolerate all existing taints to run on the corresponding node.\n\nNOTE: This list is implemented as a \"map\" type, meaning that individual elements can be managed by different owners.",
+          "items": {
+            "description": "MachineTaint defines a taint equivalent to corev1.Taint, but additionally having a propagation field.",
+            "properties": {
+              "effect": {
+                "description": "effect is the effect for the taint. Valid values are NoSchedule, PreferNoSchedule and NoExecute.",
+                "enum": [
+                  "NoSchedule",
+                  "PreferNoSchedule",
+                  "NoExecute"
+                ],
+                "type": "string"
+              },
+              "key": {
+                "description": "key is the taint key to be applied to a node.\nMust be a valid qualified name of maximum size 63 characters\nwith an optional subdomain prefix of maximum size 253 characters,\nseparated by a `/`.",
+                "maxLength": 317,
+                "minLength": 1,
+                "pattern": "^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*\\/)?([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]$",
+                "type": "string"
+              },
+              "propagation": {
+                "description": "propagation defines how this taint should be propagated to nodes.\nValid values are 'Always' and 'OnInitialization'.\nAlways: The taint will be continuously reconciled. If it is not set for a node, it will be added during reconciliation.\nOnInitialization: The taint will be added during node initialization. If it gets removed from the node later on it will not get added again.",
+                "enum": [
+                  "Always",
+                  "OnInitialization"
+                ],
+                "type": "string"
+              },
+              "value": {
+                "description": "value is the taint value corresponding to the taint key.\nIt must be a valid label value of maximum size 63 characters.",
+                "maxLength": 63,
+                "minLength": 1,
+                "pattern": "^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "effect",
+              "key",
+              "propagation"
+            ],
+            "type": "object",
+            "additionalProperties": false
+          },
+          "maxItems": 64,
+          "minItems": 1,
+          "type": "array",
+          "x-kubernetes-list-map-keys": [
+            "key",
+            "effect"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
         "version": {
           "description": "version defines the desired Kubernetes version.\nThis field is meant to be optionally used by bootstrap providers.",
           "maxLength": 256,
@@ -289,13 +343,13 @@
           "additionalProperties": false
         },
         "failureMessage": {
-          "description": "failureMessage will be set in the event that there is a terminal problem\nreconciling the Machine and will contain a more verbose string suitable\nfor logging and human consumption.\n\nThis field should not be set for transitive errors that a controller\nfaces that are expected to be fixed automatically over\ntime (like service outages), but instead indicate that something is\nfundamentally wrong with the Machine's spec or the configuration of\nthe controller, and that manual intervention is required. Examples\nof terminal errors would be invalid combinations of settings in the\nspec, values that are unsupported by the controller, or the\nresponsible controller itself being critically misconfigured.\n\nAny transient errors that occur during the reconciliation of Machines\ncan be added as events to the Machine object and/or logged in the\ncontroller's output.\n\nDeprecated: This field is deprecated and is going to be removed in the next apiVersion. Please see https://github.com/kubernetes-sigs/cluster-api/blob/main/docs/proposals/20240916-improve-status-in-CAPI-resources.md for more details.",
+          "description": "failureMessage will be set in the event that there is a terminal problem\nreconciling the Machine and will contain a more verbose string suitable\nfor logging and human consumption.\n\nThis field should not be set for transitive errors that a controller\nfaces that are expected to be fixed automatically over\ntime (like service outages), but instead indicate that something is\nfundamentally wrong with the Machine's spec or the configuration of\nthe controller, and that manual intervention is required. Examples\nof terminal errors would be invalid combinations of settings in the\nspec, values that are unsupported by the controller, or the\nresponsible controller itself being critically misconfigured.\n\nAny transient errors that occur during the reconciliation of Machines\ncan be added as events to the Machine object and/or logged in the\ncontroller's output.\n\nDeprecated: This field is deprecated and is going to be removed when support for v1beta1 will be dropped. Please see https://github.com/kubernetes-sigs/cluster-api/blob/main/docs/proposals/20240916-improve-status-in-CAPI-resources.md for more details.",
           "maxLength": 10240,
           "minLength": 1,
           "type": "string"
         },
         "failureReason": {
-          "description": "failureReason will be set in the event that there is a terminal problem\nreconciling the Machine and will contain a succinct value suitable\nfor machine interpretation.\n\nThis field should not be set for transitive errors that a controller\nfaces that are expected to be fixed automatically over\ntime (like service outages), but instead indicate that something is\nfundamentally wrong with the Machine's spec or the configuration of\nthe controller, and that manual intervention is required. Examples\nof terminal errors would be invalid combinations of settings in the\nspec, values that are unsupported by the controller, or the\nresponsible controller itself being critically misconfigured.\n\nAny transient errors that occur during the reconciliation of Machines\ncan be added as events to the Machine object and/or logged in the\ncontroller's output.\n\nDeprecated: This field is deprecated and is going to be removed in the next apiVersion. Please see https://github.com/kubernetes-sigs/cluster-api/blob/main/docs/proposals/20240916-improve-status-in-CAPI-resources.md for more details.",
+          "description": "failureReason will be set in the event that there is a terminal problem\nreconciling the Machine and will contain a succinct value suitable\nfor machine interpretation.\n\nThis field should not be set for transitive errors that a controller\nfaces that are expected to be fixed automatically over\ntime (like service outages), but instead indicate that something is\nfundamentally wrong with the Machine's spec or the configuration of\nthe controller, and that manual intervention is required. Examples\nof terminal errors would be invalid combinations of settings in the\nspec, values that are unsupported by the controller, or the\nresponsible controller itself being critically misconfigured.\n\nAny transient errors that occur during the reconciliation of Machines\ncan be added as events to the Machine object and/or logged in the\ncontroller's output.\n\nDeprecated: This field is deprecated and is going to be removed when support for v1beta1 will be dropped. Please see https://github.com/kubernetes-sigs/cluster-api/blob/main/docs/proposals/20240916-improve-status-in-CAPI-resources.md for more details.",
           "type": "string"
         },
         "infrastructureReady": {
@@ -345,6 +399,18 @@
             "osImage": {
               "description": "OS Image reported by the node from /etc/os-release (e.g. Debian GNU/Linux 7 (wheezy)).",
               "type": "string"
+            },
+            "swap": {
+              "description": "Swap Info reported by the node.",
+              "properties": {
+                "capacity": {
+                  "description": "Total amount of swap memory in bytes.",
+                  "format": "int64",
+                  "type": "integer"
+                }
+              },
+              "type": "object",
+              "additionalProperties": false
             },
             "systemUUID": {
               "description": "SystemUUID reported by the node. For unique machine identification\nMachineID is preferred. This field is specific to Red Hat hosts\nhttps://access.redhat.com/documentation/en-us/red_hat_subscription_management/1/html/rhsm/uuid",
